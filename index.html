@@ -10,6 +10,7 @@
     <meta name="author" content="JustStreamIt Team">
     <meta name="robots" content="index, follow">
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <header>
@@ -27,7 +28,7 @@
                 <div class="movie-details">
                     <h3>The Big Lebowski</h3>
                     <p class="movie-synopsis">Un loser sympathique se retrouve mêlé à une affaire d'enlèvement à cause d'une confusion d'identité. Une comédie culte des frères Coen.</p>
-                    <button class="details-button" onclick="location.href='movie-details.html'">Détails</button>
+                    <button class="details-button">Détails</button>
                 </div>
             </div>
         </section>
@@ -61,6 +62,24 @@
             
         </section>
     </main>
+     <!-- Fenêtre modale pour les détails du film -->
+     <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>The Big Lebowski</h2>
+            <div class="movie-frame">
+                <img src="https://fr.web.img6.acsta.net/r_1920_1080/medias/04/00/83/040083_af.jpg" alt="Affiche du film" class="movie-poster">
+                <div class="movie-details">
+                    <p class="movie-synopsis">
+                        Un loser sympathique se retrouve mêlé à une affaire d'enlèvement à cause d'une confusion d'identité. Une comédie culte des frères Coen.
+                    </p>
+                    <p><strong>Réalisateurs :</strong> Joel Coen, Ethan Coen</p>
+                    <p><strong>Année :</strong> 1998</p>
+                    <p><strong>Genre :</strong> Comédie, Policier</p>
+                </div>
+            </div>
+        </div>
+    </div>
     <footer>
         <p>&copy; 2023 JustStreamIt. Tous droits réservés.</p>
     </footer>
