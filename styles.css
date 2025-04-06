@@ -83,41 +83,51 @@
     position: relative;
     background-color: white;
     padding: 20px;
-    border-radius: 10px;
     width: 80%;
     max-width: 600px;
 }
+
 /* Conteneur principal des sections */
 .modal-sections {
     display: grid;
-    grid-template-columns: 1fr 2fr; /* Deux colonnes : affiche et contenu */
-    gap: 20px;
+    grid-template-columns: 2fr 1fr; /* Deux colonnes : contenu (titre) à gauche et affiche à droite */
+    gap: 20px; /* Espacement entre les colonnes */
     width: 100%;
-}
-
-/* Section Affiche */
-.modal-poster {
-    grid-column: 1; /* Place l'affiche dans la première colonne */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    border: 5px solid #000;
+    padding: 10px;
+    box-sizing: border-box; /* Inclut la bordure et le padding dans la largeur totale */
+    align-items: start; /* Aligne les éléments verticalement en haut */
 }
 
 /* Section Titre du film */
 .modal-title {
-    grid-column: 2; /* Place le titre dans la deuxième colonne */
-    margin-bottom: 20px;
+    grid-column: 1; /* Place le titre dans la première colonne */
+}
+
+/* Section Affiche */
+.modal-poster {
+    grid-column: 2; /* Place l'affiche dans la deuxième colonne */
+    display: flex;
+    justify-content: center; /* Centre l'image horizontalement */
+    align-items: flex-start; /* Aligne l'image en haut */
 }
 
 /* Section Réalisé par et Synopsis */
 .modal-synopsis {
-    grid-column: 2; /* Place le synopsis dans la deuxième colonne */
+    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
     margin-bottom: 20px;
 }
 
 /* Section Liste des acteurs */
 .modal-actors {
-    grid-column: 2; /* Place les acteurs dans la deuxième colonne */
+    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+}
+
+.modal-button {
+    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+    display: flex;
+    justify-content: center; /* Centre le bouton horizontalement */
+    margin-top: 20px; /* Ajoute un espace au-dessus du bouton */
 }
 
 /* Styles spécifiques au bouton "Détails" */
