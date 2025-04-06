@@ -212,7 +212,7 @@ h1, h2 {
     }
 
     h1 {
-        font-size: 24px; /* Réduit la taille du titre */
+        display: none; /* Masque le titre h1 sur les écrans mobiles */
     }
 
     h2 {
