@@ -30,21 +30,23 @@
     line-height: 1.5;
 }
 
-.details-button {
-    align-self: flex-end;  /* Aligne le bouton à droite */
+/* Classe commune pour les boutons */
+.button {
     background-color: #FF0000;
     color: white;
     border: none;
-    padding: 10px 25px 10px 25px;
-    cursor: pointer;
     border-radius: 10px;
-    
+    cursor: pointer;
+    font-weight: bold; /* Texte en gras */
+    padding: 10px 50px;
+    font-size: 16px;
+    text-align: center;
 }
 
-.details-button:hover {
+/* Effet hover commun */
+.button:hover {
     background-color: #CC0000;
 }
-
 #top-rated-movies {
     margin: 20px 0;
 }
@@ -75,48 +77,57 @@
 }
 
 .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
     background-color: white;
     padding: 20px;
     border-radius: 10px;
     width: 80%;
     max-width: 600px;
-    text-align: center;
-    position: relative;
+}
+/* Conteneur principal des sections */
+.modal-sections {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Deux colonnes : affiche et contenu */
+    gap: 20px;
+    width: 100%;
 }
 
-.movie-details-modal h2 {
-    font-size: 28px;
-    margin-bottom: 10px;
+/* Section Affiche */
+.modal-poster {
+    grid-column: 1; /* Place l'affiche dans la première colonne */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
-.movie-details-modal p {
-    margin: 5px 0;
-    font-size: 16px;
+/* Section Titre du film */
+.modal-title {
+    grid-column: 2; /* Place le titre dans la deuxième colonne */
+    margin-bottom: 20px;
 }
 
-.movie-details-modal h3 {
-    margin-top: 20px;
-    font-size: 20px;
+/* Section Réalisé par et Synopsis */
+.modal-synopsis {
+    grid-column: 2; /* Place le synopsis dans la deuxième colonne */
+    margin-bottom: 20px;
 }
 
-
-.actors-list {
-    margin: 10px 0;
-    font-size: 16px;
+/* Section Liste des acteurs */
+.modal-actors {
+    grid-column: 2; /* Place les acteurs dans la deuxième colonne */
 }
 
+/* Styles spécifiques au bouton "Détails" */
+.details-button {
+    align-self: flex-end; /* Aligne le bouton à droite */
+    padding: 10px 25px; /* Ajuste la taille */
+}
+
+/* Styles spécifiques au bouton "Fermer" */
 .close-button {
     display: block;
     margin: 20px auto 0; /* Centré horizontalement */
-    padding: 10px 20px;
-    background-color: #FF0000;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.close-button:hover {
-    background-color: #CC0000;
 }
