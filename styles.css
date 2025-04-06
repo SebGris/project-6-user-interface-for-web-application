@@ -1,3 +1,27 @@
+h1, h2 {
+    font-family: 'Oswald', sans-serif; /* Applique la police Oswald */
+    font-weight: 500; /* Utilise le poids Medium */
+}
+
+.logo {
+    display: flex; /* Active le mode flexbox */
+    align-items: center; /* Aligne verticalement le logo et le titre */
+    background-color: #61787f; /* Fond gris clair */
+    color: #ffffff; /* Texte en blanc */
+    padding: 10px; /* Ajoute un peu d'espace autour du contenu */
+}
+
+.logo img {
+    width: 100px; /* Réduit la taille du logo */
+    height: auto; /* Conserve les proportions */
+    margin-right: 10px; /* Ajoute un espace entre le logo et le titre */
+}
+
+.logo h1 {
+    font-size: 20px; /* Ajuste la taille du titre */
+    margin: 0; /* Supprime les marges par défaut */
+}
+
 .movie-frame {
     display: flex;
     align-items: center;
@@ -102,6 +126,12 @@
 /* Section Titre du film */
 .modal-title {
     grid-column: 1; /* Place le titre dans la première colonne */
+}
+
+.modal-title p {
+    margin: 0; /* Supprime les marges par défaut */
+    line-height: 1.2; /* Réduit l'espacement entre les lignes */
+    font-weight: bold; /* Met le texte en gras */
 }
 
 /* Section Affiche */
