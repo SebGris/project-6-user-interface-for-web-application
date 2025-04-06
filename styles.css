@@ -75,12 +75,6 @@ h1, h2 {
     margin: 20px 0;
 }
 
-.movie-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colonnes */
-    gap: 20px; /* Espacement entre les éléments */
-    justify-items: center; /* Centre les éléments horizontalement */
-}
 
 .movie-item img {
     width: 150px; /* Largeur des affiches */
@@ -170,4 +164,63 @@ h1, h2 {
 .close-button {
     display: block;
     margin: 20px auto 0; /* Centré horizontalement */
+}
+
+/* Styles par défaut (Desktop) */
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colonnes */
+    gap: 20px; /* Espacement entre les éléments */
+    justify-items: center; /* Centre les éléments horizontalement */
+}
+
+/* Styles pour Tablet (768px et moins) */
+@media (max-width: 768px) {
+    .logo {
+        flex-direction: column; /* Empile le logo et le titre */
+        text-align: center;
+    }
+
+    .movie-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colonnes pour Tablet */
+    }
+
+    .movie-frame {
+        flex-direction: column; /* Empile l'affiche et les détails */
+        align-items: center;
+    }
+
+    .movie-poster {
+        width: 120px; /* Réduit la taille de l'affiche */
+    }
+}
+
+/* Styles pour Mobile (480px et moins) */
+@media (max-width: 480px) {
+    .logo img {
+        width: 80px; /* Réduit encore la taille du logo */
+    }
+
+    .movie-grid {
+        grid-template-columns: 1fr; /* 1 colonne pour Mobile */
+    }
+
+    .movie-frame {
+        flex-direction: column; /* Empile tout verticalement */
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 24px; /* Réduit la taille du titre */
+    }
+
+    h2 {
+        font-size: 20px; /* Réduit la taille des sous-titres */
+    }
+
+    .button {
+        padding: 8px 20px; /* Réduit la taille des boutons */
+        font-size: 14px;
+    }
 }
