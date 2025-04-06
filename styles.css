@@ -18,7 +18,7 @@ h1, h2 {
 }
 
 .logo h1 {
-    font-size: 20px; /* Ajuste la taille du titre */
+    font-size: 36px; /* Ajuste la taille du titre */
     margin: 0; /* Supprime les marges par défaut */
 }
 
