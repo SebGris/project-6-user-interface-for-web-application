@@ -23,14 +23,11 @@ window.addEventListener('click', (event) => {
     }
 });
 
-// URL de l'API pour le meilleur film
-const bestMovieUrl = 'http://localhost:8000/api/v1/titles/499549';
-
 // Fonction pour charger le meilleur film
-async function loadBestMovie() {
+async function loadBestMovie(url) {
     try {
         // Récupérer les données de l'API
-        const response = await fetch(bestMovieUrl);
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Erreur HTTP : ${response.status}`);
         }
@@ -52,4 +49,7 @@ async function loadBestMovie() {
 }
 
 // Charger le meilleur film au chargement de la page
-document.addEventListener('DOMContentLoaded', loadBestMovie);
+document.addEventListener('DOMContentLoaded', () => {
+    const bestMovieUrl = 'http://localhost:8000/api/v1/titles/499549';
+    loadBestMovie(bestMovieUrl);
+});
