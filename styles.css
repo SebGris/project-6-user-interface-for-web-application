@@ -183,6 +183,13 @@ h1, h2 {
     justify-items: center; /* Centre les éléments horizontalement */
 }
 
+.movie-item img {
+    width: 150px; /* Largeur des affiches */
+    height: auto;
+    border-radius: 5px; /* Coins arrondis */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
 /* Styles pour Tablet (768px et moins) */
 @media (max-width: 768px) {
     .logo {

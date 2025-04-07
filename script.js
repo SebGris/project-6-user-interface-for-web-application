@@ -69,11 +69,42 @@ async function getFirstMovieId(url) {
     }
 }
 
+// Fonction pour charger les 6 films les mieux notés
+async function loadTopRatedMovies(url) {
+    try {
+        // Récupérer les données de l'API
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        const data = await response.json();
+
+        // Sélectionner le conteneur des films
+        const movieGrid = document.querySelector('#top-rated-movies .movie-grid');
+
+        // Effacer les films existants (si nécessaire)
+        movieGrid.innerHTML = '';
+
+        // Ajouter les 6 premiers films
+        data.results.slice(0, 6).forEach(movie => {
+            const movieItem = document.createElement('div');
+            movieItem.classList.add('movie-item');
+            movieItem.innerHTML = `
+                <img src="${movie.image_url}" alt="Affiche du film ${movie.title}">
+            `;
+            movieGrid.appendChild(movieItem);
+        });
+    } catch (error) {
+        console.error('Erreur lors du chargement des films les mieux notés :', error);
+    }
+}
 
 // Charger le meilleur film au chargement de la page
 document.addEventListener('DOMContentLoaded', async () => {
-    const apiUrl = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score';
-    const firstMovieId = await getFirstMovieId(apiUrl);
+    const topRatedMoviesUrl = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score';
+    // Charger les 6 films les mieux notés
+    loadTopRatedMovies(topRatedMoviesUrl);
+    const firstMovieId = await getFirstMovieId(topRatedMoviesUrl);
     console.log("ID du premier film :", firstMovieId);
 
     // Charger les détails du film avec cet ID
