@@ -71,6 +71,14 @@ h1, h2 {
 .button:hover {
     background-color: #CC0000;
 }
+
+/* Centrer le bouton Voir plus */
+.see-more-button {
+    display: block;
+    margin: 0 auto;
+    display: none; /* Masque le bouton sur écran Desktop */
+}
+
 #top-rated-movies {
     margin: 20px 0;
 }
@@ -194,6 +202,9 @@ h1, h2 {
     .movie-poster {
         width: 120px; /* Réduit la taille de l'affiche */
     }
+    .see-more-button {
+        display: block; /* Affiche le bouton sur écran Tablet */
+    }
 }
 
 /* Styles pour Mobile (480px et moins) */
@@ -222,5 +233,9 @@ h1, h2 {
     .button {
         padding: 8px 20px; /* Réduit la taille des boutons */
         font-size: 14px;
+    }
+    
+    .see-more-button {
+        display: block; /* Affiche le bouton sur écran Tablet */
     }
 }
