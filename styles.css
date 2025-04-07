@@ -183,11 +183,41 @@ h1, h2 {
     justify-items: center; /* Centre les éléments horizontalement */
 }
 
+/* Styles pour les éléments de categorie-1 */
+.movie-item {
+    position: relative; /* Nécessaire pour positionner l'overlay */
+    overflow: hidden; /* Empêche le contenu de dépasser */
+}
+
 .movie-item img {
+    display: block; /* Affiche l'image comme un bloc */
     width: 150px; /* Largeur des affiches */
     height: auto;
     border-radius: 5px; /* Coins arrondis */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+/* Bandeau transparent gris */
+.movie-item .overlay {
+    position: absolute;
+    bottom: 0; /* Place le bandeau en bas de l'image */
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6); /* Fond gris transparent */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+/* Bouton dans le bandeau */
+.movie-item .overlay .details-button {
+    background-color: #FF0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 15px;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 /* Styles pour Tablet (768px et moins) */
