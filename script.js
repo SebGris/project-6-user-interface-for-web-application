@@ -48,8 +48,37 @@ async function loadBestMovie(url) {
     }
 }
 
+// Fonction pour récupérer l'ID du premier film dans les résultats
+async function getFirstMovieId(url) {
+    try {
+        // Récupérer les données de l'API
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        const data = await response.json();
+
+        // Vérifier si des résultats existent
+        if (data.results && data.results.length > 0) {
+            return data.results[0].id; // Retourner l'ID du premier film
+        } else {
+            throw new Error("Aucun film trouvé dans les résultats.");
+        }
+    } catch (error) {
+        console.error('Erreur lors de la récupération du premier film :', error);
+    }
+}
+
+
 // Charger le meilleur film au chargement de la page
-document.addEventListener('DOMContentLoaded', () => {
-    const bestMovieUrl = 'http://localhost:8000/api/v1/titles/499549';
-    loadBestMovie(bestMovieUrl);
+document.addEventListener('DOMContentLoaded', async () => {
+    const apiUrl = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score';
+    const firstMovieId = await getFirstMovieId(apiUrl);
+    console.log("ID du premier film :", firstMovieId);
+
+    // Charger les détails du film avec cet ID
+    if (firstMovieId) {
+        const movieDetailsUrl = `http://localhost:8000/api/v1/titles/${firstMovieId}`;
+        loadBestMovie(movieDetailsUrl);
+    }
 });
