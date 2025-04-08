@@ -270,6 +270,9 @@ h1, h2, label, select {
 
     .modal-close {
         display: block; /* Affiche le bouton de fermeture sur Tablet */
+        font-size: 40px; /* Réduit la taille de la croix */
+        top: 5px; /* Ajuste la position verticale */
+        right: 5px; /* Ajuste la position horizontale */
     }
     
     .modal-button {
@@ -306,11 +309,14 @@ h1, h2, label, select {
     }
     
     .see-more-button {
-        display: block; /* Affiche le bouton sur écran Tablet */
+        display: block; /* Affiche le bouton sur écran Mobile */
     }
 
     .modal-close {
-        display: block; /* Affiche le bouton de fermeture sur Tablet */
+        display: block; /* Affiche le bouton de fermeture sur Mobile */
+        font-size: 40px; /* Réduit la taille de la croix */
+        top: 5px; /* Ajuste la position verticale */
+        right: 5px; /* Ajuste la position horizontale */
     }
 
     .modal-button {
