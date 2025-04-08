@@ -119,7 +119,6 @@ h1, h2, label, select {
     grid-template-columns: 2fr 1fr; /* Deux colonnes : contenu (titre) à gauche et affiche à droite */
     gap: 20px; /* Espacement entre les colonnes */
     width: 100%;
-    border: 5px solid #000;
     padding: 10px;
     box-sizing: border-box; /* Inclut la bordure et le padding dans la largeur totale */
     align-items: start; /* Aligne les éléments verticalement en haut */
@@ -160,6 +159,24 @@ h1, h2, label, select {
     display: flex;
     justify-content: center; /* Centre le bouton horizontalement */
     margin-top: 20px; /* Ajoute un espace au-dessus du bouton */
+}
+
+/* Bouton de fermeture (croix) */
+.modal-close {
+    display: none; /* Masque le Bouton de fermeture (croix) sur les écrans desktop */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF0000;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    color: #CC0000; /* Change la couleur au survol */
 }
 
 /* Styles spécifiques au bouton "Détails" */
@@ -246,8 +263,17 @@ h1, h2, label, select {
     .movie-poster {
         width: 120px; /* Réduit la taille de l'affiche */
     }
+
     .see-more-button {
         display: block; /* Affiche le bouton sur écran Tablet */
+    }
+
+    .modal-close {
+        display: block; /* Affiche le bouton de fermeture sur Tablet */
+    }
+    
+    .modal-button {
+        display: none; /* Masque le bouton de détails sur Tablet */
     }
 }
 
@@ -281,5 +307,13 @@ h1, h2, label, select {
     
     .see-more-button {
         display: block; /* Affiche le bouton sur écran Tablet */
+    }
+
+    .modal-close {
+        display: block; /* Affiche le bouton de fermeture sur Tablet */
+    }
+
+    .modal-button {
+        display: none; /* Masque le bouton de détails sur Mobile */
     }
 }

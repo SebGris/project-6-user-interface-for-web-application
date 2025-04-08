@@ -16,6 +16,14 @@ closeButton.addEventListener('click', () => {
     modal.style.display = 'none'; // Cache la modale
 });
 
+// Sélectionner le bouton de fermeture (croix)
+const closeModalButton = document.querySelector('.modal-close');
+
+// Ajouter un événement pour fermer la modale
+closeModalButton.addEventListener('click', () => {
+    modal.style.display = 'none'; // Cache la modale
+});
+
 // Fermer la modale en cliquant en dehors du contenu
 window.addEventListener('click', (event) => {
     if (event.target === modal) {
