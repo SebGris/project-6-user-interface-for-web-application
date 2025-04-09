@@ -64,12 +64,7 @@ async function loadBestMovie(url) {
 // Fonction pour récupérer l'ID du premier film dans les résultats
 async function getFirstMovieId(url) {
     try {
-        // Récupérer les données de l'API
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP : ${response.status}`);
-        }
-        const data = await response.json();
+        const data = await fetchData(url);
         // Vérifier si des résultats existent
         if (data.results && data.results.length > 0) {
             return data.results[0].id; // Retourner l'ID du premier film
@@ -135,16 +130,16 @@ async function loadCategories(url) {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', async () => {
+    // Chargement des catégories
     const genresUrl = 'http://localhost:8000/api/v1/genres/';
     loadCategories(genresUrl);
-    
     const topRatedMoviesUrl = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score';
-    loadTopRatedMovies(topRatedMoviesUrl);
+    // Affichage du "meilleur film"
     const firstMovieId = await getFirstMovieId(topRatedMoviesUrl);
-
-    // Charger les détails du film avec cet ID
     if (firstMovieId) {
         const movieDetailsUrl = `http://localhost:8000/api/v1/titles/${firstMovieId}`;
         loadBestMovie(movieDetailsUrl);
     }
+    // Affichage "film les mieux notés"
+    loadTopRatedMovies(topRatedMoviesUrl);
 });
