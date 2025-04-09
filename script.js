@@ -1,5 +1,14 @@
 let categories = []; // Variable globale pour stocker les catégories
  
+// Fonction générique pour effectuer une requête API
+async function fetchData(url) {
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    return response.json();
+}
+
 // Sélection des éléments
 const modal = document.getElementById('movie-modal');
 const openModalButtons = document.querySelectorAll('.details-button');
@@ -37,17 +46,11 @@ window.addEventListener('click', (event) => {
 async function loadBestMovie(url) {
     try {
         // Récupérer les données de l'API
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP : ${response.status}`);
-        }
-        const movie = await response.json();
-
+        const movie = await fetchData(url);
         // Sélectionner les éléments de la section "Meilleur film"
         const bestMoviePoster = document.querySelector('#best-movie .movie-poster');
         const bestMovieTitle = document.querySelector('#best-movie .movie-details h3');
         const bestMovieSynopsis = document.querySelector('#best-movie .movie-synopsis');
-
         // Mettre à jour le contenu avec les données de l'API
         bestMoviePoster.src = movie.image_url;
         bestMoviePoster.alt = `Affiche du film ${movie.title}`;
@@ -67,7 +70,6 @@ async function getFirstMovieId(url) {
             throw new Error(`Erreur HTTP : ${response.status}`);
         }
         const data = await response.json();
-
         // Vérifier si des résultats existent
         if (data.results && data.results.length > 0) {
             return data.results[0].id; // Retourner l'ID du premier film
@@ -82,19 +84,11 @@ async function getFirstMovieId(url) {
 // Fonction pour charger les 6 films les mieux notés
 async function loadTopRatedMovies(url) {
     try {
-        // Récupérer les données de l'API
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP : ${response.status}`);
-        }
-        const data = await response.json();
-
+        const data = await fetchData(url);
         // Sélectionner le conteneur des films
         const movieGrid = document.querySelector('#top-rated-movies .movie-grid');
-
         // Effacer les films existants (si nécessaire)
         movieGrid.innerHTML = '';
-
         // Ajouter les 6 premiers films
         data.results.slice(0, 6).forEach(movie => {
             const movieItem = document.createElement('div');
@@ -108,14 +102,11 @@ async function loadTopRatedMovies(url) {
         console.error('Erreur lors du chargement des films les mieux notés :', error);
     }
 }
-
+// Fonction pour remplir la liste déroulante des catégories
 function populateOtherCategories() {
-    // Sélectionner la liste déroulante
     const categorySelect = document.getElementById('other-categories');
-
     // Effacer les options existantes
     categorySelect.innerHTML = '';
-
     // Ajouter les catégories à la liste déroulante
     categories.forEach(category => {
         const option = document.createElement('option');
@@ -125,24 +116,16 @@ function populateOtherCategories() {
     });
 }
 
+// Fonction pour charger les catégories
 async function loadCategories(url) {
     try {
-        // Charger toutes les pages de catégories
         while (url) {
-            // Récupérer les données de l'API
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP : ${response.status}`);
-            }
-            const data = await response.json();
-
+            const data = await fetchData(url);
             // Ajouter les catégories de la page actuelle à la variable globale
             categories = categories.concat(data.results);
-
             // Passer à la page suivante (si disponible)
             url = data.next;
         }
-
         // Appeler la fonction pour remplir la liste déroulante
         populateOtherCategories();
     } catch (error) {
@@ -150,17 +133,14 @@ async function loadCategories(url) {
     }
 }
 
-// Charger le meilleur film au chargement de la page
+// Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', async () => {
-    // Charger les catégories au chargement de la page
     const genresUrl = 'http://localhost:8000/api/v1/genres/';
     loadCategories(genresUrl);
     
     const topRatedMoviesUrl = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score';
-    // Charger les 6 films les mieux notés
     loadTopRatedMovies(topRatedMoviesUrl);
     const firstMovieId = await getFirstMovieId(topRatedMoviesUrl);
-    console.log("ID du premier film :", firstMovieId);
 
     // Charger les détails du film avec cet ID
     if (firstMovieId) {
