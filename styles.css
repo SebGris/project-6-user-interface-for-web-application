@@ -214,6 +214,15 @@ h1, h2, label, select {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
 }
 
+/* Styles pour le titre du film dans l'overlay */
+.movie-item .overlay .movie-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0 0 10px 0; /* Espacement entre le titre et le bouton */
+    color: white;
+    text-align: center;
+}
+
 /* Bandeau transparent gris */
 .movie-item .overlay {
     position: absolute;

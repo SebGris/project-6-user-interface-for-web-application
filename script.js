@@ -113,6 +113,7 @@ async function loadTopRatedMovies(url) {
             movieItem.innerHTML = `
                 <img src="${movie.image_url}" alt="Affiche du film ${movie.title}">
                 <div class="overlay">
+                    <p class="movie-title">${movie.title}</p>
                     <button class="button details-button" data-movie-id="${movie.id}">Détails</button>
                 </div>
             `;
