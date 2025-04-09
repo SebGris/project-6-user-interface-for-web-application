@@ -1,3 +1,5 @@
+let categories = []; // Variable globale pour stocker les catégories
+ 
 // Sélection des éléments
 const modal = document.getElementById('movie-modal');
 const openModalButtons = document.querySelectorAll('.details-button');
@@ -107,15 +109,24 @@ async function loadTopRatedMovies(url) {
     }
 }
 
-// Fonction pour charger les catégories depuis l'API
+function populateOtherCategories() {
+    // Sélectionner la liste déroulante
+    const categorySelect = document.getElementById('other-categories');
+
+    // Effacer les options existantes
+    categorySelect.innerHTML = '';
+
+    // Ajouter les catégories à la liste déroulante
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category.name.toLowerCase(); // Utiliser le nom comme valeur
+        option.textContent = category.name; // Afficher le nom dans la liste
+        categorySelect.appendChild(option);
+    });
+}
+
 async function loadCategories(url) {
     try {
-        // Sélectionner la liste déroulante
-        const categorySelect = document.getElementById('other-categories');
-
-        // Effacer les options existantes
-        categorySelect.innerHTML = '';
-
         // Charger toutes les pages de catégories
         while (url) {
             // Récupérer les données de l'API
@@ -124,19 +135,16 @@ async function loadCategories(url) {
                 throw new Error(`Erreur HTTP : ${response.status}`);
             }
             const data = await response.json();
-            categories = data.results; // Stocker les catégories
 
-            // Ajouter les nouvelles catégories
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category.name.toLowerCase(); // Utiliser le nom comme valeur
-                option.textContent = category.name; // Afficher le nom dans la liste
-                categorySelect.appendChild(option);
-            });
+            // Ajouter les catégories de la page actuelle à la variable globale
+            categories = categories.concat(data.results);
 
             // Passer à la page suivante (si disponible)
             url = data.next;
         }
+
+        // Appeler la fonction pour remplir la liste déroulante
+        populateOtherCategories();
     } catch (error) {
         console.error('Erreur lors du chargement des catégories :', error);
     }
@@ -144,6 +152,10 @@ async function loadCategories(url) {
 
 // Charger le meilleur film au chargement de la page
 document.addEventListener('DOMContentLoaded', async () => {
+    // Charger les catégories au chargement de la page
+    const genresUrl = 'http://localhost:8000/api/v1/genres/';
+    loadCategories(genresUrl);
+    
     const topRatedMoviesUrl = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score';
     // Charger les 6 films les mieux notés
     loadTopRatedMovies(topRatedMoviesUrl);
@@ -155,7 +167,4 @@ document.addEventListener('DOMContentLoaded', async () => {
         const movieDetailsUrl = `http://localhost:8000/api/v1/titles/${firstMovieId}`;
         loadBestMovie(movieDetailsUrl);
     }
-    // Charger les catégories au chargement de la page
-    const genresUrl = 'http://localhost:8000/api/v1/genres/';
-    loadCategories(genresUrl);
 });
