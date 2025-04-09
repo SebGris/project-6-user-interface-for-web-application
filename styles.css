@@ -83,12 +83,6 @@ h1, h2, label, select {
     margin: 20px 0;
 }
 
-
-.movie-item img {
-    width: 150px; /* Largeur des affiches */
-    height: auto;
-}
-
 .modal {
     display: none; /* Cachée par défaut */
     position: fixed;
@@ -208,10 +202,32 @@ h1, h2, label, select {
 
 .movie-item img {
     display: block; /* Affiche l'image comme un bloc */
-    width: 150px; /* Largeur des affiches */
+    width: 250px; /* Largeur des affiches */
     height: auto;
     border-radius: 5px; /* Coins arrondis */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
+}
+
+/* Titre affiché au milieu de l'image */
+.movie-item .movie-title-on-image {
+    position: absolute;
+    top: 50%; /* Position verticale au centre */
+    left: 50%; /* Position horizontale au centre */
+    transform: translate(-50%, -50%); /* Centre le texte */
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6); /* Fond semi-transparent */
+    padding: 5px 10px;
+    border-radius: 5px; /* Coins arrondis */
+    text-align: center;
+    z-index: 2; /* Place le titre au-dessus de l'image */
+}
+
+/* Assurez-vous que le conteneur .movie-item est positionné correctement */
+.movie-item {
+    position: relative; /* Nécessaire pour positionner les éléments enfants */
+    overflow: hidden; /* Empêche le contenu de dépasser */
 }
 
 /* Styles pour le titre du film dans l'overlay */
@@ -250,8 +266,6 @@ h1, h2, label, select {
 .movie-item .overlay .details-button:hover {
     background-color: #333333; /* Gris foncé pour l'effet hover */
 }
-
-
 
 /* Styles pour Tablet (768px et moins) */
 @media (max-width: 768px) {
