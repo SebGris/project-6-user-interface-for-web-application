@@ -10,6 +10,12 @@ async function fetchData(url) {
 }
 
 // Fonction pour afficher ou cacher la modale
+/**
+ * @description
+* Si `display` est vrai et qu'un objet `movie` est fourni, le contenu de la modale 
+* est mis à jour avec les détails du film (titre, année, genres, affiche, description et acteurs).
+* Sinon, la modale est simplement cachée ou affichée sans que son contenu soit mis à jour.
+ */
 function toggleModal(display, movie = null) {
     const modal = document.getElementById('movie-modal');
     if (display && movie) {
