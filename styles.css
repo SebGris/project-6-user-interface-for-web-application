@@ -208,22 +208,6 @@ h1, h2, label, select {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
 }
 
-/* Titre affiché au milieu de l'image */
-.movie-item .movie-title-on-image {
-    position: absolute;
-    top: 50%; /* Position verticale au centre */
-    left: 50%; /* Position horizontale au centre */
-    transform: translate(-50%, -50%); /* Centre le texte */
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.6); /* Fond semi-transparent */
-    padding: 5px 10px;
-    border-radius: 5px; /* Coins arrondis */
-    text-align: center;
-    z-index: 2; /* Place le titre au-dessus de l'image */
-}
-
 /* Assurez-vous que le conteneur .movie-item est positionné correctement */
 .movie-item {
     position: relative; /* Nécessaire pour positionner les éléments enfants */
@@ -242,11 +226,11 @@ h1, h2, label, select {
 /* Bandeau transparent gris */
 .movie-item .overlay {
     position: absolute;
-    bottom: 0; /* Place le bandeau en bas de l'image */
+    top: 0; /* Place le bandeau en haut de l'image */
     left: 0;
     right: 0;
+    font-size: 18px;
     background: rgba(0, 0, 0, 0.6); /* Fond gris transparent */
-    color: white;
     text-align: center;
     padding: 10px 0;
 }

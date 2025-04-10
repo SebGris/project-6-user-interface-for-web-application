@@ -111,9 +111,9 @@ async function loadTopRatedMovies(url) {
             const movieItem = document.createElement('div');
             movieItem.classList.add('movie-item');
             movieItem.innerHTML = `
-                <p class="movie-title-on-image">${movie.title}</p>
                 <img src="${movie.image_url}" alt="Affiche du film ${movie.title}">
                 <div class="overlay">
+                    <p class="movie-title">${movie.title}</p>
                     <button class="button details-button" data-movie-id="${movie.id}">Détails</button>
                 </div>
             `;
