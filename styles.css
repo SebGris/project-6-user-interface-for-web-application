@@ -204,35 +204,26 @@ h1, h2, label, select {
     display: block; /* Affiche l'image comme un bloc */
     width: 250px; /* Largeur des affiches */
     height: auto;
-    border-radius: 5px; /* Coins arrondis */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
 }
 
-/* Assurez-vous que le conteneur .movie-item est positionné correctement */
-.movie-item {
-    position: relative; /* Nécessaire pour positionner les éléments enfants */
-    overflow: hidden; /* Empêche le contenu de dépasser */
+/* Bandeau transparent gris */
+.movie-item .overlay {
+    position: absolute;
+    top: 30px; /* Place le bandeau à 10px du haut de l'image */
+    left: 0;
+    right: 0;
+    font-size: 18px;
+    background: rgba(0, 0, 0, 0.6); /* Fond gris transparent */
+    padding: 10px 0;
 }
 
 /* Styles pour le titre du film dans l'overlay */
 .movie-item .overlay .movie-title {
     font-size: 16px;
     font-weight: bold;
-    margin: 0 0 10px 0; /* Espacement entre le titre et le bouton */
+    margin: 20px;
     color: white;
-    text-align: center;
-}
-
-/* Bandeau transparent gris */
-.movie-item .overlay {
-    position: absolute;
-    top: 0; /* Place le bandeau en haut de l'image */
-    left: 0;
-    right: 0;
-    font-size: 18px;
-    background: rgba(0, 0, 0, 0.6); /* Fond gris transparent */
-    text-align: center;
-    padding: 10px 0;
 }
 
 /* Bouton dans le bandeau */
