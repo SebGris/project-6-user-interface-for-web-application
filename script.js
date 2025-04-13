@@ -1,4 +1,5 @@
 let categories = []; // Variable globale pour stocker les catégories
+const baseUrl = 'http://localhost:8000/api/v1/titles/';
  
 // Fonction générique pour effectuer une requête API
 async function fetchData(url) {
@@ -71,7 +72,7 @@ async function loadBestMovie(url) {
         if (!results || results.length === 0) {
             throw new Error("Aucun film trouvé.");
         }
-        const movie = await fetchData(`http://localhost:8000/api/v1/titles/${results[0].id}`);
+        const movie = await fetchData(`${baseUrl}${results[0].id}`);
         const bestMovieElement = document.querySelector('#best-movie');
         bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
         bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movie.title}`;
@@ -84,7 +85,8 @@ async function loadBestMovie(url) {
 }
 
 // Fonction pour charger les 6 films les mieux notés
-async function loadTopRatedMovies(genre, containerSelector, topRatedUrls) {
+async function loadTopRatedMovies(genre, containerSelector) {
+    const topRatedUrls = [`${baseUrl}?sort_by=-imdb_score`, `${baseUrl}?page=2&sort_by=-imdb_score`];
     if (genre) {
         const container = document.querySelector(containerSelector);
         container.querySelector('h2').textContent = genre;
@@ -112,7 +114,7 @@ async function loadTopRatedMovies(genre, containerSelector, topRatedUrls) {
             button.addEventListener('click', (event) => {
                 const movieId = event.target.getAttribute('data-movie-id');
                 console.log(`Bouton Détails cliqué pour le film ID : ${movieId}`);
-                const movie = fetchData(`http://localhost:8000/api/v1/titles/${movieId}`);
+                const movie = fetchData(`${baseUrl}${movieId}`);
                 toggleModal(true, movie);
             });
         });
@@ -120,6 +122,14 @@ async function loadTopRatedMovies(genre, containerSelector, topRatedUrls) {
         console.error('Erreur lors du chargement des films les mieux notés :', error);
     }
 }
+
+// Gestionnaire d'événements pour le menu déroulant des catégories
+document.getElementById('other-categories').addEventListener('change', (event) => {
+    const selectedCategory = event.target.value;
+    if (selectedCategory) {
+        loadTopRatedMovies(selectedCategory, '#categorie-3');
+    }
+});
 
 // Fonction pour remplir la liste déroulante des catégories
 function populateOtherCategories() {
@@ -145,13 +155,11 @@ async function loadCategories(url) {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', async () => {
-    const baseUrl = 'http://localhost:8000/api/v1/titles/';
     const bestMovieUrl = `${baseUrl}?page=1&sort_by=-imdb_score`;
-    const topRatedUrls = [`${baseUrl}?sort_by=-imdb_score`, `${baseUrl}?page=2&sort_by=-imdb_score`];
     const genresUrl = 'http://localhost:8000/api/v1/genres/';
     await loadBestMovie(bestMovieUrl);
-    await loadTopRatedMovies('', '#top-rated-movies', topRatedUrls);
-    await loadTopRatedMovies('Action', '#categorie-1', topRatedUrls);
-    await loadTopRatedMovies('Comedy', '#categorie-2', topRatedUrls);
+    await loadTopRatedMovies('', '#top-rated-movies');
+    await loadTopRatedMovies('Action', '#categorie-1');
+    await loadTopRatedMovies('Comedy', '#categorie-2');
     await loadCategories(genresUrl);
 });
