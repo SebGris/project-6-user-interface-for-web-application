@@ -19,13 +19,14 @@ async function fetchData(url) {
 function toggleModal(display, movie = null) {
     const modal = document.getElementById('movie-modal');
     if (display && movie) {
-        // Mettre à jour le contenu de la modale
-        modal.querySelector('.modal-title h2').textContent = movie.title;
-        modal.querySelector('.modal-title p').textContent = `${movie.year} - ${movie.genres.join(', ')}`;
-        modal.querySelector('.modal-poster img').src = movie.image_url;
-        modal.querySelector('.modal-poster img').alt = `Affiche du film ${movie.title}`;
-        modal.querySelector('.modal-synopsis .movie-synopsis').textContent = movie.description;
-        modal.querySelector('.modal-actors .actors-list').textContent = movie.actors.join(', ');
+        // Déstructuration {} de l'objet movie pour extraire ses propriétés
+        const { title, year, genres, image_url, description, actors } = movie;
+        modal.querySelector('.modal-title h2').textContent = title;
+        modal.querySelector('.modal-title p').textContent = `${year} - ${genres.join(', ')}`;
+        modal.querySelector('.modal-poster img').src = image_url;
+        modal.querySelector('.modal-poster img').alt = `Affiche du film ${title}`;
+        modal.querySelector('.modal-synopsis .movie-synopsis').textContent = description;
+        modal.querySelector('.modal-actors .actors-list').textContent = actors.join(', ');
     }
     modal.style.display = display ? 'flex' : 'none';
 }
@@ -70,13 +71,13 @@ async function loadBestMovie(url) {
         const movieDetailsUrl = `http://localhost:8000/api/v1/titles/${firstMovieId}`;
         try {
             const movie = await fetchData(movieDetailsUrl);
-            document.querySelector('#best-movie .movie-poster').src = movie.image_url;
-            document.querySelector('#best-movie .movie-poster').alt = `Affiche du film ${movie.title}`;
-            document.querySelector('#best-movie .movie-details h3').textContent = movie.title;
-            document.querySelector('#best-movie .movie-synopsis').textContent = movie.description;
-
+            const bestMovieElement = document.querySelector('#best-movie');
+            bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
+            bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movie.title}`;
+            bestMovieElement.querySelector('.movie-details h3').textContent = movie.title;
+            bestMovieElement.querySelector('.movie-synopsis').textContent = movie.description;
             // Ajouter un événement au bouton "Détails"
-            document.querySelector('#best-movie .details-button').addEventListener('click', () => toggleModal(true, movie));
+            bestMovieElement.querySelector('.details-button').addEventListener('click', () => toggleModal(true, movie));
         } catch (error) {
             console.error('Erreur lors du chargement du meilleur film :', error);
         }
@@ -104,13 +105,13 @@ async function loadTopRatedMovies(url1, url2) {
         // Récupérer les données des deux pages en parallèle
         const [data1, data2] = await Promise.all([fetchData(url1), fetchData(url2)]);
         // Combiner les résultats des deux pages dans un seul tableau
-        const combinedResults = [...data1.results, ...data2.results]; // avec l'opérateur de décomposition
+        const combinedResults = [...data1.results, ...data2.results].slice(0, 6); // avec l'opérateur de décomposition
         // Sélectionner le conteneur des films
         const movieGrid = document.querySelector('#top-rated-movies .movie-grid');
         // Effacer les films existants (si nécessaire)
         movieGrid.innerHTML = '';
-        // Ajouter les 6 premiers films
-        combinedResults.slice(0, 6).forEach(movie => {
+        // Ajouter les films
+        combinedResults.forEach(movie => {
             const movieItem = document.createElement('div');
             movieItem.classList.add('movie-item');
             movieItem.innerHTML = `
@@ -156,10 +157,9 @@ async function loadCategories(url) {
     try {
         while (url) {
             const data = await fetchData(url);
-            categories = categories.concat(data.results);
-            url = data.next; // Passer à la page suivante
+            categories = [...categories, ...data.results];
+            url = data.next;
         }
-        // Appeler la fonction pour remplir la liste déroulante
         populateOtherCategories();
     } catch (error) {
         console.error('Erreur lors du chargement des catégories :', error);
@@ -168,11 +168,11 @@ async function loadCategories(url) {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', async () => {
-    const genresUrl = 'http://localhost:8000/api/v1/genres/';
     const bestMovieUrl = 'http://localhost:8000/api/v1/titles/?page=1&sort_by=-imdb_score';
     const topRatedMoviesUrl1 = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score';
     const topRatedMoviesUrl2 = 'http://localhost:8000/api/v1/titles/?page=2&sort_by=-imdb_score';
-    await loadCategories(genresUrl); // Charger les catégories
+    const genresUrl = 'http://localhost:8000/api/v1/genres/';
     await loadBestMovie(bestMovieUrl); // Charger le meilleur film
     await loadTopRatedMovies(topRatedMoviesUrl1, topRatedMoviesUrl2); // Charger les films les mieux notés
+    await loadCategories(genresUrl); // Charger les catégories
 });
