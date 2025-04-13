@@ -321,3 +321,7 @@ h1, h2, label, select {
         display: none; /* Masque le bouton de détails sur Mobile */
     }
 }
+
+#categorie-3 h2 {
+    display: none; /* Masque le titre h2 de la section Autres catégories */
+}

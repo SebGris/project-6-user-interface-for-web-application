@@ -84,38 +84,36 @@ async function loadBestMovie(url) {
 }
 
 // Fonction pour charger les 6 films les mieux notés
-async function loadTopRatedMovies(h2Text, containerSelector, url1, url2) {
-    try {
-        // Mettre à jour le texte de l'élément <h2>
+async function loadTopRatedMovies(genre, containerSelector, topRatedUrls) {
+    if (genre) {
         const container = document.querySelector(containerSelector);
-        container.querySelector('h2').textContent = h2Text;
-        // Récupérer les données des deux pages en parallèle
-        const [data1, data2] = await Promise.all([fetchData(url1), fetchData(url2)]);
-        // Combiner les résultats des deux pages dans un seul tableau
-        const combinedResults = [...data1.results, ...data2.results].slice(0, 6); // avec l'opérateur de décomposition
-        // Sélectionner le conteneur des films
+        container.querySelector('h2').textContent = genre;
+        urls = topRatedUrls.map(url => `${url}&genre=${genre}`);
+    }
+    else {
+        urls = topRatedUrls;
+    }
+    // Récupérer les films à partir des URLs
+    try {
+        const results = (await Promise.all(urls.map(fetchData)))
+            .flatMap(data => data.results)
+            .slice(0, 6);
         const movieGrid = document.querySelector(`${containerSelector} .movie-grid`);
-        // Effacer les films existants (si nécessaire)
-        movieGrid.innerHTML = '';
-        // Ajouter les films
-        combinedResults.forEach(movie => {
-            const movieItem = document.createElement('div');
-            movieItem.classList.add('movie-item');
-            movieItem.innerHTML = `
+        movieGrid.innerHTML = results.map(movie => `
+            <div class="movie-item">
                 <img src="${movie.image_url}" alt="Affiche du film ${movie.title}">
                 <div class="overlay">
                     <p class="movie-title">${movie.title}</p>
                     <button class="button details-button" data-movie-id="${movie.id}">Détails</button>
                 </div>
-            `;
-            movieGrid.appendChild(movieItem);
-        });
-        // Ajouter des événements aux boutons "Détails"
+            </div>
+        `).join('');
         document.querySelectorAll('.details-button').forEach(button => {
             button.addEventListener('click', (event) => {
                 const movieId = event.target.getAttribute('data-movie-id');
                 console.log(`Bouton Détails cliqué pour le film ID : ${movieId}`);
-                loadMovieDetails(movieId); // Charger les détails du film
+                const movie = fetchData(`http://localhost:8000/api/v1/titles/${movieId}`);
+                toggleModal(true, movie);
             });
         });
     } catch (error) {
@@ -126,15 +124,9 @@ async function loadTopRatedMovies(h2Text, containerSelector, url1, url2) {
 // Fonction pour remplir la liste déroulante des catégories
 function populateOtherCategories() {
     const categorySelect = document.getElementById('other-categories');
-    // Effacer les options existantes
-    categorySelect.innerHTML = '';
-    // Ajouter les catégories à la liste déroulante
-    categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category.name.toLowerCase(); // Utiliser le nom comme valeur
-        option.textContent = category.name; // Afficher le nom dans la liste
-        categorySelect.appendChild(option);
-    });
+    categorySelect.innerHTML = categories.map(category => `
+        <option value="${category.name}">${category.name}</option>
+    `).join('');
 }
 
 // Fonction pour charger les catégories
@@ -153,14 +145,13 @@ async function loadCategories(url) {
 
 // Initialisation au chargement de la page
 document.addEventListener('DOMContentLoaded', async () => {
-    const bestMovieUrl = 'http://localhost:8000/api/v1/titles/?page=1&sort_by=-imdb_score';
-    const topRatedMoviesUrl1 = 'http://localhost:8000/api/v1/titles/?sort_by=-imdb_score';
-    const topRatedMoviesUrl2 = 'http://localhost:8000/api/v1/titles/?page=2&sort_by=-imdb_score';
+    const baseUrl = 'http://localhost:8000/api/v1/titles/';
+    const bestMovieUrl = `${baseUrl}?page=1&sort_by=-imdb_score`;
+    const topRatedUrls = [`${baseUrl}?sort_by=-imdb_score`, `${baseUrl}?page=2&sort_by=-imdb_score`];
     const genresUrl = 'http://localhost:8000/api/v1/genres/';
-    await loadBestMovie(bestMovieUrl); // Charger le meilleur film
-    const bestFilmTitle = 'Films les mieux notés';
-    await loadTopRatedMovies(bestFilmTitle, '#top-rated-movies', topRatedMoviesUrl1, topRatedMoviesUrl2); // Charger les films les mieux notés
-    const categorie1Title = 'Sport';
-    await loadTopRatedMovies(categorie1Title, '#categorie-2', topRatedMoviesUrl1, topRatedMoviesUrl2); // Charger les films les mieux notés
-    await loadCategories(genresUrl); // Charger les catégories
+    await loadBestMovie(bestMovieUrl);
+    await loadTopRatedMovies('', '#top-rated-movies', topRatedUrls);
+    await loadTopRatedMovies('Action', '#categorie-1', topRatedUrls);
+    await loadTopRatedMovies('Comedy', '#categorie-2', topRatedUrls);
+    await loadCategories(genresUrl);
 });
