@@ -39,7 +39,6 @@ const closeButton = document.querySelector('.close-button');
 // Ouvrir la modale
 openModalButtons.forEach(button => {
     button.addEventListener('click', () => {
-        console.log('Bouton Détails cliqué'); // Vérifie si le clic est détecté
         modal.style.display = 'flex'; // Affiche la modale
     });
 });
@@ -110,7 +109,6 @@ async function loadTopRatedMovies(genre, containerSelector) {
         movieGrid.querySelectorAll('.details-button').forEach(button => {
             button.addEventListener('click', async (event) => {
                 const movieId = event.target.getAttribute('data-movie-id');
-                console.log(`Bouton Détails cliqué pour le film ID : ${movieId}`);
                 const movie = await fetchData(`${baseUrl}${movieId}`);
                 toggleModal(true, movie);
             });
