@@ -66,36 +66,20 @@ window.addEventListener('click', (event) => {
 
 // Fonction pour charger le meilleur film
 async function loadBestMovie(url) {
-    const firstMovieId = await getFirstMovieId(url);
-    if (firstMovieId) {
-        const movieDetailsUrl = `http://localhost:8000/api/v1/titles/${firstMovieId}`;
-        try {
-            const movie = await fetchData(movieDetailsUrl);
-            const bestMovieElement = document.querySelector('#best-movie');
-            bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
-            bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movie.title}`;
-            bestMovieElement.querySelector('.movie-details h3').textContent = movie.title;
-            bestMovieElement.querySelector('.movie-synopsis').textContent = movie.description;
-            // Ajouter un événement au bouton "Détails"
-            bestMovieElement.querySelector('.details-button').addEventListener('click', () => toggleModal(true, movie));
-        } catch (error) {
-            console.error('Erreur lors du chargement du meilleur film :', error);
-        }
-    }
-}
-
-// Fonction pour récupérer l'ID du premier film dans les résultats
-async function getFirstMovieId(url) {
     try {
-        const data = await fetchData(url);
-        // Vérifier si des résultats existent
-        if (data.results && data.results.length > 0) {
-            return data.results[0].id; // Retourner l'ID du premier film
-        } else {
-            throw new Error("Aucun film trouvé dans les résultats.");
+        const { results } = await fetchData(url);
+        if (!results || results.length === 0) {
+            throw new Error("Aucun film trouvé.");
         }
+        const movie = await fetchData(`http://localhost:8000/api/v1/titles/${results[0].id}`);
+        const bestMovieElement = document.querySelector('#best-movie');
+        bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
+        bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movie.title}`;
+        bestMovieElement.querySelector('.movie-details h3').textContent = movie.title;
+        bestMovieElement.querySelector('.movie-synopsis').textContent = movie.description;
+        bestMovieElement.querySelector('.details-button').addEventListener('click', () => toggleModal(true, movie));
     } catch (error) {
-        console.error('Erreur lors de la récupération du premier film :', error);
+        console.error('Erreur lors du chargement du meilleur film :', error);
     }
 }
 
