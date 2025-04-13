@@ -22,7 +22,7 @@ function toggleModal(display, movie = null) {
             '#year-genre': `${movie.year} - ${movie.genres.join(', ')}`,
             '#rating-duration': `PG-${movie.rated} - ${movie.duration} minutes (${movie.countries.join(' / ')})`,
             '#score': `Score IMDB: ${movie.imdb_score}/10`,
-            '#box-office': `Recettes au box-office : ${worldwide_gross_income}`,
+            '#box-office': `Recettes au box-office: ${worldwide_gross_income}`,
             '#directors': movie.directors.join(', '),
             '.modal-synopsis .movie-synopsis': movie.description,
             '.modal-actors .actors-list': movie.actors.join(', ')
