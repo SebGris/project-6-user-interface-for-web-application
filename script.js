@@ -84,14 +84,17 @@ async function loadBestMovie(url) {
 }
 
 // Fonction pour charger les 6 films les mieux notés
-async function loadTopRatedMovies(url1, url2) {
+async function loadTopRatedMovies(h2Text, containerSelector, url1, url2) {
     try {
+        // Mettre à jour le texte de l'élément <h2>
+        const container = document.querySelector(containerSelector);
+        container.querySelector('h2').textContent = h2Text;
         // Récupérer les données des deux pages en parallèle
         const [data1, data2] = await Promise.all([fetchData(url1), fetchData(url2)]);
         // Combiner les résultats des deux pages dans un seul tableau
         const combinedResults = [...data1.results, ...data2.results].slice(0, 6); // avec l'opérateur de décomposition
         // Sélectionner le conteneur des films
-        const movieGrid = document.querySelector('#top-rated-movies .movie-grid');
+        const movieGrid = document.querySelector(`${containerSelector} .movie-grid`);
         // Effacer les films existants (si nécessaire)
         movieGrid.innerHTML = '';
         // Ajouter les films
@@ -155,6 +158,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const topRatedMoviesUrl2 = 'http://localhost:8000/api/v1/titles/?page=2&sort_by=-imdb_score';
     const genresUrl = 'http://localhost:8000/api/v1/genres/';
     await loadBestMovie(bestMovieUrl); // Charger le meilleur film
-    await loadTopRatedMovies(topRatedMoviesUrl1, topRatedMoviesUrl2); // Charger les films les mieux notés
+    const bestFilmTitle = 'Films les mieux notés';
+    await loadTopRatedMovies(bestFilmTitle, '#top-rated-movies', topRatedMoviesUrl1, topRatedMoviesUrl2); // Charger les films les mieux notés
+    const categorie1Title = 'Sport';
+    await loadTopRatedMovies(categorie1Title, '#categorie-2', topRatedMoviesUrl1, topRatedMoviesUrl2); // Charger les films les mieux notés
     await loadCategories(genresUrl); // Charger les catégories
 });
