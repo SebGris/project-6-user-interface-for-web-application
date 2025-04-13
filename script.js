@@ -123,14 +123,6 @@ async function loadTopRatedMovies(genre, containerSelector) {
     }
 }
 
-// Gestionnaire d'événements pour le menu déroulant des catégories
-document.getElementById('other-categories').addEventListener('change', (event) => {
-    const selectedCategory = event.target.value;
-    if (selectedCategory) {
-        loadTopRatedMovies(selectedCategory, '#categorie-3');
-    }
-});
-
 // Fonction pour remplir la liste déroulante des catégories
 function populateOtherCategories() {
     const categorySelect = document.getElementById('other-categories');
@@ -162,4 +154,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadTopRatedMovies('Action', '#categorie-1');
     await loadTopRatedMovies('Comedy', '#categorie-2');
     await loadCategories(genresUrl);
+    document.getElementById('other-categories').addEventListener('change', (event) => {
+        const selectedCategory = event.target.value;
+        if (selectedCategory) {
+            loadTopRatedMovies(selectedCategory, '#categorie-3');
+        }
+    });   
 });
