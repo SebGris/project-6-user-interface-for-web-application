@@ -29,6 +29,7 @@ h1, h2, label, select {
     gap: 20px;
     border: 5px solid #000;
     padding: 10px;
+    position: relative; /* Nécessaire pour le positionnement absolu */
 }
 
 .movie-poster {
@@ -177,6 +178,9 @@ h1, h2, label, select {
 .details-button {
     align-self: flex-end; /* Aligne le bouton à droite */
     padding: 10px 25px; /* Ajuste la taille */
+    position: absolute;
+    right: 10px; /* Ajustez la valeur selon vos besoins */
+    bottom: 10px; /* Ajustez la valeur selon vos besoins */
 }
 
 /* Styles spécifiques au bouton "Fermer" */
