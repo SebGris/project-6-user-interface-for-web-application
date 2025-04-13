@@ -80,6 +80,12 @@ h1, h2, label, select {
     display: none; /* Masque le bouton sur écran Desktop */
 }
 
+.see-less-button {
+    display: block;
+    margin: 0 auto;
+    display: none; /* Masque le bouton sur écran Desktop */
+}
+
 #top-rated-movies {
     margin: 20px 0;
 }
