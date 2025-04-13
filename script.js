@@ -85,21 +85,18 @@ async function loadBestMovie(url) {
 
 // Fonction pour charger les 6 films les mieux notés
 async function loadTopRatedMovies(genre, containerSelector) {
-    const topRatedUrls = [`${baseUrl}?sort_by=-imdb_score`, `${baseUrl}?page=2&sort_by=-imdb_score`];
-    if (genre) {
-        const container = document.querySelector(containerSelector);
-        container.querySelector('h2').textContent = genre;
-        urls = topRatedUrls.map(url => `${url}&genre=${genre}`);
-    }
-    else {
-        urls = topRatedUrls;
-    }
-    // Récupérer les films à partir des URLs
+    const baseUrls = [`${baseUrl}?sort_by=-imdb_score`, `${baseUrl}?page=2&sort_by=-imdb_score`];
+    const urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
+
     try {
         const results = (await Promise.all(urls.map(fetchData)))
             .flatMap(data => data.results)
             .slice(0, 6);
-        const movieGrid = document.querySelector(`${containerSelector} .movie-grid`);
+
+        const container = document.querySelector(containerSelector);
+        if (genre) container.querySelector('h2').textContent = genre;
+
+        const movieGrid = container.querySelector('.movie-grid');
         movieGrid.innerHTML = results.map(movie => `
             <div class="movie-item">
                 <img src="${movie.image_url}" alt="Affiche du film ${movie.title}">
@@ -109,11 +106,12 @@ async function loadTopRatedMovies(genre, containerSelector) {
                 </div>
             </div>
         `).join('');
-        document.querySelectorAll('.details-button').forEach(button => {
-            button.addEventListener('click', (event) => {
+
+        movieGrid.querySelectorAll('.details-button').forEach(button => {
+            button.addEventListener('click', async (event) => {
                 const movieId = event.target.getAttribute('data-movie-id');
                 console.log(`Bouton Détails cliqué pour le film ID : ${movieId}`);
-                const movie = fetchData(`${baseUrl}${movieId}`);
+                const movie = await fetchData(`${baseUrl}${movieId}`);
                 toggleModal(true, movie);
             });
         });
