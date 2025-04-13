@@ -10,23 +10,31 @@ async function fetchData(url) {
 }
 
 // Fonction pour afficher ou cacher la modale
-/**
- * @description
-* Si `display` est vrai et qu'un objet `movie` est fourni, le contenu de la modale 
-* est mis à jour avec les détails du film (titre, année, genres, affiche, description et acteurs).
-* Sinon, la modale est simplement cachée ou affichée sans que son contenu soit mis à jour.
- */
 function toggleModal(display, movie = null) {
     const modal = document.getElementById('movie-modal');
     if (display && movie) {
-        // Déstructuration {} de l'objet movie pour extraire ses propriétés
-        const { title, year, genres, image_url, description, actors } = movie;
-        modal.querySelector('.modal-title h2').textContent = title;
-        modal.querySelector('.modal-title p').textContent = `${year} - ${genres.join(', ')}`;
-        modal.querySelector('.modal-poster img').src = image_url;
-        modal.querySelector('.modal-poster img').alt = `Affiche du film ${title}`;
-        modal.querySelector('.modal-synopsis .movie-synopsis').textContent = description;
-        modal.querySelector('.modal-actors .actors-list').textContent = actors.join(', ');
+        const movieTitle = movie.original_title || movie.title;
+        const worldwide_gross_income = movie.worldwide_gross_income 
+            ? `$${(movie.worldwide_gross_income / 1_000_000).toFixed(1)}m` 
+            : 'non renseigné';
+        const modalElements = {
+            '.modal-title h2': movieTitle,
+            '#year-genre': `${movie.year} - ${movie.genres.join(', ')}`,
+            '#rating-duration': `PG-${movie.rated} - ${movie.duration} minutes (${movie.countries.join(' / ')})`,
+            '#score': `Score IMDB: ${movie.imdb_score}/10`,
+            '#box-office': `Recettes au box-office : ${worldwide_gross_income}`,
+            '#directors': movie.directors.join(', '),
+            '.modal-synopsis .movie-synopsis': movie.description,
+            '.modal-actors .actors-list': movie.actors.join(', ')
+        };
+
+        for (const [selector, textContent] of Object.entries(modalElements)) {
+            modal.querySelector(selector).textContent = textContent;
+        }
+
+        const poster = modal.querySelector('.modal-poster img');
+        poster.src = movie.image_url;
+        poster.alt = `Affiche du film ${movieTitle}`;
     }
     modal.style.display = display ? 'flex' : 'none';
 }
@@ -71,10 +79,11 @@ async function loadBestMovie(url) {
             throw new Error("Aucun film trouvé.");
         }
         const movie = await fetchData(`${baseUrl}${results[0].id}`);
+        const movieTitle = movie.original_title || movie.title;
         const bestMovieElement = document.querySelector('#best-movie');
         bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
-        bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movie.title}`;
-        bestMovieElement.querySelector('.movie-details h3').textContent = movie.title;
+        bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movieTitle}`;
+        bestMovieElement.querySelector('.movie-details h3').textContent = movieTitle;
         bestMovieElement.querySelector('.movie-synopsis').textContent = movie.description;
         bestMovieElement.querySelector('.details-button').addEventListener('click', () => toggleModal(true, movie));
     } catch (error) {
@@ -98,9 +107,9 @@ async function loadTopRatedMovies(genre, containerSelector) {
         const movieGrid = container.querySelector('.movie-grid');
         movieGrid.innerHTML = results.map(movie => `
             <div class="movie-item">
-                <img src="${movie.image_url}" alt="Affiche du film ${movie.title}">
+                <img src="${movie.image_url}" alt="Affiche du film ${movie.original_title || movie.title}">
                 <div class="overlay">
-                    <p class="movie-title">${movie.title}</p>
+                    <p class="movie-title">${ movie.original_title || movie.title}</p>
                     <button class="button details-button" data-movie-id="${movie.id}">Détails</button>
                 </div>
             </div>
@@ -143,7 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadBestMovie(bestMovieUrl);
     await loadTopRatedMovies('', '#top-rated-movies');
     await loadTopRatedMovies('Action', '#categorie-1');
-    await loadTopRatedMovies('Comedy', '#categorie-2');
+    await loadTopRatedMovies('Romance', '#categorie-2');
     await loadCategories(genresUrl);
     document.getElementById('other-categories').addEventListener('change', (event) => {
         const selectedCategory = event.target.value;
