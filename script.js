@@ -91,6 +91,45 @@ async function loadBestMovie(url) {
     }
 }
 
+// Fonction pour gérer l'affichage des films en fonction de la taille de l'écran
+function updateMovieVisibility(containerSelector) {
+    const container = document.querySelector(containerSelector);
+    const movies = container.querySelectorAll('.movie-item');
+    const seeMoreButton = container.querySelector('.see-more-button');
+    const seeLessButton = container.querySelector('.see-less-button');
+
+    const isTablet = window.matchMedia('(max-width: 768px)').matches;
+    const isMobile = window.matchMedia('(max-width: 480px)').matches;
+
+    let visibleCount = movies.length;
+    if (isMobile) {
+        visibleCount = 2; // Affiche les 2 premiers films
+    } else if (isTablet) {
+        visibleCount = 4; // Affiche les 4 premiers films
+    }
+
+    movies.forEach((movie, index) => {
+        movie.style.display = index < visibleCount ? 'block' : 'none';
+    });
+
+    seeMoreButton.style.display = visibleCount < movies.length ? 'block' : 'none';
+    seeLessButton.style.display = 'none';
+
+    seeMoreButton.addEventListener('click', () => {
+        movies.forEach(movie => (movie.style.display = 'block'));
+        seeMoreButton.style.display = 'none';
+        seeLessButton.style.display = 'block';
+    });
+
+    seeLessButton.addEventListener('click', () => {
+        movies.forEach((movie, index) => {
+            movie.style.display = index < visibleCount ? 'block' : 'none';
+        });
+        seeMoreButton.style.display = 'block';
+        seeLessButton.style.display = 'none';
+    });
+}
+
 // Fonction pour charger les 6 films les mieux notés
 async function loadTopRatedMovies(genre, containerSelector) {
     const baseUrls = [`${baseUrl}?sort_by=-imdb_score`, `${baseUrl}?page=2&sort_by=-imdb_score`];
@@ -122,6 +161,9 @@ async function loadTopRatedMovies(genre, containerSelector) {
                 toggleModal(true, movie);
             });
         });
+
+        // Met à jour l'affichage des films en fonction de la taille de l'écran
+        updateMovieVisibility(containerSelector);
     } catch (error) {
         console.error('Erreur lors du chargement des films les mieux notés :', error);
     }
@@ -160,4 +202,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadTopRatedMovies(selectedCategory, '#categorie-3');
         }
     });   
+});
+
+// Réagir aux changements de taille de l'écran
+window.addEventListener('resize', () => {
+    updateMovieVisibility('#top-rated-movies');
+    updateMovieVisibility('#categorie-1');
+    updateMovieVisibility('#categorie-2');
+    updateMovieVisibility('#categorie-3');
 });

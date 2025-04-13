@@ -208,6 +208,7 @@ h1, h2, label, select {
 .movie-item {
     position: relative; /* Nécessaire pour positionner l'overlay */
     overflow: hidden; /* Empêche le contenu de dépasser */
+    display: none; /* Masque les films par défaut */
 }
 
 .movie-item img {
@@ -286,6 +287,10 @@ h1, h2, label, select {
     .modal-button {
         display: none; /* Masque le bouton de détails sur Tablet */
     }
+
+    .movie-item:nth-child(-n+4) {
+        display: block; /* Affiche les 4 premiers films sur Tablet */
+    }
 }
 
 /* Styles pour Mobile (480px et moins) */
@@ -329,6 +334,20 @@ h1, h2, label, select {
 
     .modal-button {
         display: none; /* Masque le bouton de détails sur Mobile */
+    }
+
+    .movie-item:nth-child(-n+2) {
+        display: block; /* Affiche les 2 premiers films sur Mobile */
+    }
+}
+
+/* Affiche tous les films sur Desktop */
+@media (min-width: 769px) {
+    .movie-item {
+        display: block;
+    }
+    .see-more-button, .see-less-button {
+        display: none;
     }
 }
 
