@@ -108,13 +108,11 @@ async function loadTopRatedMovies(url1, url2) {
             movieGrid.appendChild(movieItem);
         });
         // Ajouter des événements aux boutons "Détails"
-        const detailButtons = document.querySelectorAll('.details-button');
-        detailButtons.forEach(button => {
+        document.querySelectorAll('.details-button').forEach(button => {
             button.addEventListener('click', (event) => {
                 const movieId = event.target.getAttribute('data-movie-id');
                 console.log(`Bouton Détails cliqué pour le film ID : ${movieId}`);
-                // Appeler une fonction pour afficher les détails du film
-                loadMovieDetails(movieId);
+                loadMovieDetails(movieId); // Charger les détails du film
             });
         });
     } catch (error) {
