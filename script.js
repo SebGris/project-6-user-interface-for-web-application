@@ -1,4 +1,3 @@
-let categories = []; // Variable globale pour stocker les catégories
 const baseUrl = 'http://localhost:8000/api/v1/titles/';
  
 // Fonction générique pour effectuer une requête API
@@ -123,23 +122,19 @@ async function loadTopRatedMovies(genre, containerSelector) {
     }
 }
 
-// Fonction pour remplir la liste déroulante des catégories
-function populateOtherCategories() {
-    const categorySelect = document.getElementById('other-categories');
-    categorySelect.innerHTML = categories.map(category => `
-        <option value="${category.name}">${category.name}</option>
-    `).join('');
-}
-
 // Fonction pour charger les catégories
 async function loadCategories(url) {
+    let categories = [];
     try {
         while (url) {
             const data = await fetchData(url);
             categories = [...categories, ...data.results];
             url = data.next;
         }
-        populateOtherCategories();
+        const categorySelect = document.getElementById('other-categories');
+        categorySelect.innerHTML = categories.map(category => `
+            <option value="${category.name}">${category.name}</option>
+        `).join('');
     } catch (error) {
         console.error('Erreur lors du chargement des catégories :', error);
     }
