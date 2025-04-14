@@ -1,4 +1,7 @@
-const baseUrl = 'http://localhost:8000/api/v1/titles/';
+const API = {
+    baseUrl: 'http://localhost:8000/api/v1/titles/',
+    genresUrl: 'http://localhost:8000/api/v1/genres/',
+};
 
 // Fonction générique pour effectuer une requête API
 async function fetchData(url) {
@@ -62,7 +65,7 @@ async function loadBestMovie(url) {
         if (!results || results.length === 0) {
             throw new Error("Aucun film trouvé.");
         }
-        const movie = await fetchData(`${baseUrl}${results[0].id}`);
+        const movie = await fetchData(`${API.baseUrl}${results[0].id}`);
         const movieTitle = movie.original_title || movie.title;
         const bestMovieElement = document.querySelector('#best-movie');
         bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
@@ -120,7 +123,7 @@ function updateMovieVisibility(containerSelector) {
 
 // Fonction pour charger les 6 films les mieux notés
 async function loadTopRatedMovies(genre, containerSelector) {
-    const baseUrls = [`${baseUrl}?sort_by=-imdb_score`, `${baseUrl}?page=2&sort_by=-imdb_score`];
+    const baseUrls = [`${API.baseUrl}?sort_by=-imdb_score`, `${API.baseUrl}?page=2&sort_by=-imdb_score`];
     const urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
 
     try {
@@ -143,27 +146,24 @@ async function loadTopRatedMovies(genre, containerSelector) {
         `).join('');
 
         // Ajout des événements pour les images des films
-        movieGrid.querySelectorAll('.movie-image').forEach(image => {
-            image.addEventListener('click', async (event) => {
-                const movieId = event.target.getAttribute('data-movie-id');
-                const movie = await fetchData(`${baseUrl}${movieId}`);
-                toggleModal(true, movie);
-            });
-        });
-
-        movieGrid.querySelectorAll('.details-button').forEach(button => {
-            button.addEventListener('click', async (event) => {
-                const movieId = event.target.getAttribute('data-movie-id');
-                const movie = await fetchData(`${baseUrl}${movieId}`);
-                toggleModal(true, movie);
-            });
-        });
+        addMovieDetailsEvent('.movie-image', (movie) => toggleModal(true, movie));
+        addMovieDetailsEvent('.details-button', (movie) => toggleModal(true, movie));
 
         // Met à jour l'affichage des films en fonction de la taille de l'écran
         updateMovieVisibility(containerSelector);
     } catch (error) {
         console.error('Erreur lors du chargement des films les mieux notés :', error);
     }
+}
+
+function addMovieDetailsEvent(selector, callback) {
+    document.querySelectorAll(selector).forEach(element => {
+        element.addEventListener('click', async (event) => {
+            const movieId = event.target.getAttribute('data-movie-id');
+            const movie = await fetchData(`${API.baseUrl}${movieId}`);
+            callback(movie);
+        });
+    });
 }
 
 // Fonction pour charger les catégories
@@ -194,14 +194,13 @@ function setupResizeEvents() {
 
 // Fonction principale d'initialisation
 async function initialize() {
-    const bestMovieUrl = `${baseUrl}?page=1&sort_by=-imdb_score`;
-    const genresUrl = 'http://localhost:8000/api/v1/genres/';
+    const bestMovieUrl = `${API.baseUrl}?page=1&sort_by=-imdb_score`;
 
     await loadBestMovie(bestMovieUrl);
     await loadTopRatedMovies('', '#top-rated-movies');
     await loadTopRatedMovies('Action', '#categorie-1');
     await loadTopRatedMovies('Romance', '#categorie-2');
-    await loadCategories(genresUrl);
+    await loadCategories(API.genresUrl);
 
     document.getElementById('other-categories').addEventListener('change', (event) => {
         const selectedCategory = event.target.value;
