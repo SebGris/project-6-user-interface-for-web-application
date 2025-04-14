@@ -202,6 +202,7 @@ async function initialize() {
 }
 
 async function loadInitialData() {
+    // Est-ce que page 1 fait gagner de temps ???? TODO
     const bestMovieUrl = `${API.baseUrl}?page=1&sort_by=-imdb_score`;
     await loadBestMovie(bestMovieUrl);
     await loadTopRatedMovies('', '#top-rated-movies');
