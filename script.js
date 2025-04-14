@@ -134,13 +134,22 @@ async function loadTopRatedMovies(genre, containerSelector) {
         const movieGrid = container.querySelector('.movie-grid');
         movieGrid.innerHTML = results.map(movie => `
             <div class="movie-item">
-                <img src="${movie.image_url}" alt="Affiche du film ${movie.original_title || movie.title}">
+                <img src="${movie.image_url}" alt="Affiche du film ${movie.original_title || movie.title}" class="movie-image" data-movie-id="${movie.id}">
                 <div class="overlay">
-                    <p class="movie-title">${ movie.original_title || movie.title}</p>
+                    <p class="movie-title">${movie.original_title || movie.title}</p>
                     <button class="button details-button" data-movie-id="${movie.id}">Détails</button>
                 </div>
             </div>
         `).join('');
+
+        // Ajout des événements pour les images des films
+        movieGrid.querySelectorAll('.movie-image').forEach(image => {
+            image.addEventListener('click', async (event) => {
+                const movieId = event.target.getAttribute('data-movie-id');
+                const movie = await fetchData(`${baseUrl}${movieId}`);
+                toggleModal(true, movie);
+            });
+        });
 
         movieGrid.querySelectorAll('.details-button').forEach(button => {
             button.addEventListener('click', async (event) => {
