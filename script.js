@@ -198,9 +198,14 @@ async function initialize() {
 
     await loadBestMovie(bestMovieUrl);
     await loadTopRatedMovies('', '#top-rated-movies');
-    await loadTopRatedMovies('Action', '#categorie-1');
+    await loadTopRatedMovies('Crime', '#categorie-1');
     await loadTopRatedMovies('Romance', '#categorie-2');
     await loadCategories(API.genresUrl);
+
+    const categorySelect = document.getElementById('other-categories');
+    if (categorySelect.value) {
+        loadTopRatedMovies(categorySelect.value, '#categorie-3'); // Charge les films pour la catégorie sélectionnée
+    }
 
     document.getElementById('other-categories').addEventListener('change', (event) => {
         const selectedCategory = event.target.value;
