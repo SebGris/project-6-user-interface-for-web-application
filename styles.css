@@ -254,6 +254,11 @@ h1, h2, label, select {
     background-color: #333333; /* Gris foncé pour l'effet hover */
 }
 
+/* Ajout d'un espacement sous la liste déroulante */
+#categorie-3 select {
+    margin-bottom: 20px; /* Ajustez la valeur selon vos besoins */
+}
+
 /* Styles pour Tablet (768px et moins) */
 @media (max-width: 768px) {
     .logo {
