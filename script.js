@@ -1,5 +1,5 @@
 const baseUrl = 'http://localhost:8000/api/v1/titles/';
- 
+
 // Fonction générique pour effectuer une requête API
 async function fetchData(url) {
     const response = await fetch(url);
@@ -39,37 +39,21 @@ function toggleModal(display, movie = null) {
     modal.style.display = display ? 'flex' : 'none';
 }
 
-// Sélection des éléments
-const modal = document.getElementById('movie-modal');
-const openModalButtons = document.querySelectorAll('.details-button');
-const closeButton = document.querySelector('.close-button');
+// Fonction pour configurer les événements de la modale
+function setupModalEvents() {
+    const modal = document.getElementById('movie-modal');
+    const closeModalButton = document.querySelector('.modal-close');
+    const closeButton = document.querySelector('.close-button');
 
-// Ouvrir la modale
-openModalButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        modal.style.display = 'flex'; // Affiche la modale
+    closeModalButton.addEventListener('click', () => toggleModal(false));
+    closeButton.addEventListener('click', () => toggleModal(false));
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            toggleModal(false);
+        }
     });
-});
-
-// Fermer la modale
-closeButton.addEventListener('click', () => {
-    modal.style.display = 'none'; // Cache la modale
-});
-
-// Sélectionner le bouton de fermeture (croix)
-const closeModalButton = document.querySelector('.modal-close');
-
-// Ajouter un événement pour fermer la modale
-closeModalButton.addEventListener('click', () => {
-    modal.style.display = 'none'; // Cache la modale
-});
-
-// Fermer la modale en cliquant en dehors du contenu
-window.addEventListener('click', (event) => {
-    if (event.target === modal) {
-        modal.style.display = 'none';
-    }
-});
+}
 
 // Fonction pour charger le meilleur film
 async function loadBestMovie(url) {
@@ -91,12 +75,31 @@ async function loadBestMovie(url) {
     }
 }
 
+// Fonction pour configurer les événements des boutons "Voir plus" et "Voir moins"
+function setupVisibilityButtons(containerSelector, movies, visibleCount) {
+    const container = document.querySelector(containerSelector);
+    const seeMoreButton = container.querySelector('.see-more-button');
+    const seeLessButton = container.querySelector('.see-less-button');
+
+    seeMoreButton.addEventListener('click', () => {
+        movies.forEach(movie => (movie.style.display = 'block'));
+        seeMoreButton.style.display = 'none';
+        seeLessButton.style.display = 'block';
+    });
+
+    seeLessButton.addEventListener('click', () => {
+        movies.forEach((movie, index) => {
+            movie.style.display = index < visibleCount ? 'block' : 'none';
+        });
+        seeMoreButton.style.display = 'block';
+        seeLessButton.style.display = 'none';
+    });
+}
+
 // Fonction pour gérer l'affichage des films en fonction de la taille de l'écran
 function updateMovieVisibility(containerSelector) {
     const container = document.querySelector(containerSelector);
     const movies = container.querySelectorAll('.movie-item');
-    const seeMoreButton = container.querySelector('.see-more-button');
-    const seeLessButton = container.querySelector('.see-less-button');
 
     const isTablet = window.matchMedia('(max-width: 768px)').matches;
     const isMobile = window.matchMedia('(max-width: 480px)').matches;
@@ -112,22 +115,7 @@ function updateMovieVisibility(containerSelector) {
         movie.style.display = index < visibleCount ? 'block' : 'none';
     });
 
-    seeMoreButton.style.display = visibleCount < movies.length ? 'block' : 'none';
-    seeLessButton.style.display = 'none';
-
-    seeMoreButton.addEventListener('click', () => {
-        movies.forEach(movie => (movie.style.display = 'block'));
-        seeMoreButton.style.display = 'none';
-        seeLessButton.style.display = 'block';
-    });
-
-    seeLessButton.addEventListener('click', () => {
-        movies.forEach((movie, index) => {
-            movie.style.display = index < visibleCount ? 'block' : 'none';
-        });
-        seeMoreButton.style.display = 'block';
-        seeLessButton.style.display = 'none';
-    });
+    setupVisibilityButtons(containerSelector, movies, visibleCount);
 }
 
 // Fonction pour charger les 6 films les mieux notés
@@ -187,27 +175,35 @@ async function loadCategories(url) {
     }
 }
 
-// Initialisation au chargement de la page
-document.addEventListener('DOMContentLoaded', async () => {
+// Fonction pour initialiser les événements de redimensionnement
+function setupResizeEvents() {
+    const containers = ['#top-rated-movies', '#categorie-1', '#categorie-2', '#categorie-3'];
+    window.addEventListener('resize', () => {
+        containers.forEach(updateMovieVisibility);
+    });
+}
+
+// Fonction principale d'initialisation
+async function initialize() {
     const bestMovieUrl = `${baseUrl}?page=1&sort_by=-imdb_score`;
     const genresUrl = 'http://localhost:8000/api/v1/genres/';
+
     await loadBestMovie(bestMovieUrl);
     await loadTopRatedMovies('', '#top-rated-movies');
     await loadTopRatedMovies('Action', '#categorie-1');
     await loadTopRatedMovies('Romance', '#categorie-2');
     await loadCategories(genresUrl);
+
     document.getElementById('other-categories').addEventListener('change', (event) => {
         const selectedCategory = event.target.value;
         if (selectedCategory) {
             loadTopRatedMovies(selectedCategory, '#categorie-3');
         }
-    });   
-});
+    });
 
-// Réagir aux changements de taille de l'écran
-window.addEventListener('resize', () => {
-    updateMovieVisibility('#top-rated-movies');
-    updateMovieVisibility('#categorie-1');
-    updateMovieVisibility('#categorie-2');
-    updateMovieVisibility('#categorie-3');
-});
+    setupModalEvents();
+    setupResizeEvents();
+}
+
+// Initialisation au chargement de la page
+document.addEventListener('DOMContentLoaded', initialize);
