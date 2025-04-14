@@ -123,6 +123,7 @@ function updateMovieVisibility(containerSelector) {
 
 // Fonction pour charger les 6 films les mieux notés
 async function loadTopRatedMovies(genre, containerSelector) {
+    // La première URL récupère les 5 premiers films, la deuxième URL (avec page=2) récupère les 5 films suivants
     const baseUrls = [`${API.baseUrl}?sort_by=-imdb_score`, `${API.baseUrl}?page=2&sort_by=-imdb_score`];
     const urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
 
@@ -194,28 +195,32 @@ function setupResizeEvents() {
 
 // Fonction principale d'initialisation
 async function initialize() {
-    const bestMovieUrl = `${API.baseUrl}?page=1&sort_by=-imdb_score`;
+    await loadInitialData();
+    setupCategoryChangeEvent();
+    setupModalEvents();
+    setupResizeEvents();
+}
 
+async function loadInitialData() {
+    const bestMovieUrl = `${API.baseUrl}?page=1&sort_by=-imdb_score`;
     await loadBestMovie(bestMovieUrl);
     await loadTopRatedMovies('', '#top-rated-movies');
     await loadTopRatedMovies('Crime', '#categorie-1');
     await loadTopRatedMovies('Romance', '#categorie-2');
     await loadCategories(API.genresUrl);
+}
 
+function setupCategoryChangeEvent() {
     const categorySelect = document.getElementById('other-categories');
     if (categorySelect.value) {
-        loadTopRatedMovies(categorySelect.value, '#categorie-3'); // Charge les films pour la catégorie sélectionnée
+        loadTopRatedMovies(categorySelect.value, '#categorie-3');
     }
-
-    document.getElementById('other-categories').addEventListener('change', (event) => {
+    categorySelect.addEventListener('change', (event) => {
         const selectedCategory = event.target.value;
         if (selectedCategory) {
             loadTopRatedMovies(selectedCategory, '#categorie-3');
         }
     });
-
-    setupModalEvents();
-    setupResizeEvents();
 }
 
 // Initialisation au chargement de la page
