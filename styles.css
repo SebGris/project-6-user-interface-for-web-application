@@ -163,7 +163,7 @@ h1, h2, label, select {
 }
 
 /* Bouton de fermeture (croix) */
-.modal-close {
+.modal-x-close {
     display: none; /* Masque le Bouton de fermeture (croix) sur les écrans desktop */
     position: absolute;
     top: 10px;
@@ -176,7 +176,7 @@ h1, h2, label, select {
     cursor: pointer;
 }
 
-.modal-close:hover {
+.modal-x-close:hover {
     color: #CC0000; /* Change la couleur au survol */
 }
 
@@ -278,7 +278,7 @@ h1, h2, label, select {
         display: block; /* Affiche le bouton sur écran Tablet */
     }
 
-    .modal-close {
+    .modal-x-close {
         display: block; /* Affiche le bouton de fermeture sur Tablet */
         font-size: 40px; /* Réduit la taille de la croix */
         top: 5px; /* Ajuste la position verticale */
@@ -326,7 +326,7 @@ h1, h2, label, select {
         display: block; /* Affiche le bouton sur écran Mobile */
     }
 
-    .modal-close {
+    .modal-x-close {
         display: block; /* Affiche le bouton de fermeture sur Mobile */
         font-size: 40px; /* Réduit la taille de la croix */
         top: 5px; /* Ajuste la position verticale */

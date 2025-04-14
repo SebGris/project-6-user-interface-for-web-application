@@ -45,7 +45,7 @@ function toggleModal(display, movie = null) {
 // Fonction pour configurer les événements de la modale
 function setupModalEvents() {
     const modal = document.getElementById('movie-modal');
-    const closeModalButton = document.querySelector('.modal-close');
+    const closeModalButton = document.querySelector('.modal-x-close');
     const closeButton = document.querySelector('.close-button');
 
     closeModalButton.addEventListener('click', () => toggleModal(false));
