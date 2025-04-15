@@ -23,6 +23,12 @@ h1, h2, label, select {
     margin: 0; /* Supprime les marges par défaut */
 }
 
+/* Fixer la largeur de la page */
+body {
+    width: 1030px; /* Largeur fixe */
+    margin: 0 auto; /* Centrer la page horizontalement */
+}
+
 .movie-frame {
     display: flex;
     align-items: center;
