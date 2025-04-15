@@ -224,6 +224,7 @@ h1, h2, label, select {
     font-size: 18px;
     background: var(--overlay-bg);
     padding: 10px 0;
+    height: 20%;
 }
 
 /* Styles pour le titre du film dans l'overlay */
