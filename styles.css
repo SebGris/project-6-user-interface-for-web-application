@@ -16,6 +16,10 @@ h1, h2, label, select {
     font-size: 24px;
 }
 
+h2 {
+    margin-left: 20px; /* Ajustez la valeur selon vos besoins */
+}
+
 .logo {
     display: flex; /* Active le mode flexbox */
     align-items: center; /* Aligne verticalement le logo et le titre */
@@ -246,7 +250,7 @@ h1, h2, label, select {
 }
 
 /* Ajout d'un espacement sous la liste déroulante */
-#categorie-3 select {
+#other-category select {
     margin-bottom: 20px; /* Ajustez la valeur selon vos besoins */
 }
 
@@ -296,6 +300,7 @@ h1, h2, label, select {
 
     h2 {
         font-size: 20px;
+        margin-left: 20px; /* Ajustez la valeur selon vos besoins */
     }
 }
 
@@ -328,6 +333,7 @@ h1, h2, label, select {
 
     h2 {
         font-size: 20px;
+        margin-left: 20px; /* Ajustez la valeur selon vos besoins */
     }
 }
 
@@ -346,6 +352,6 @@ h1, h2, label, select {
     }
 }
 
-#categorie-3 h2 {
+#other-category h2 {
     display: none; /* Masque le titre h2 de la section Autres catégories */
 }

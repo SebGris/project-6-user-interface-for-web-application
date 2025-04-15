@@ -187,7 +187,7 @@ async function loadCategories(url) {
 
 // Fonction pour initialiser les événements de redimensionnement
 function setupResizeEvents() {
-    const containers = ['#top-rated-movies', '#categorie-1', '#categorie-2', '#categorie-3'];
+    const containers = ['#top-rated-movies', '#categorie-1', '#categorie-2', '#other-category'];
     window.addEventListener('resize', () => {
         containers.forEach(updateMovieVisibility);
     });
@@ -214,12 +214,12 @@ async function loadInitialData() {
 function setupCategoryChangeEvent() {
     const categorySelect = document.getElementById('other-categories');
     if (categorySelect.value) {
-        loadTopRatedMovies(categorySelect.value, '#categorie-3');
+        loadTopRatedMovies(categorySelect.value, '#other-category');
     }
     categorySelect.addEventListener('change', (event) => {
         const selectedCategory = event.target.value;
         if (selectedCategory) {
-            loadTopRatedMovies(selectedCategory, '#categorie-3');
+            loadTopRatedMovies(selectedCategory, '#other-category');
         }
     });
 }
