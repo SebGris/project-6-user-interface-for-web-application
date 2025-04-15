@@ -183,7 +183,10 @@ h1 {
 /* Section Réalisé par et Synopsis */
 .modal-synopsis {
     grid-column: 1 / -1;
-    margin-bottom: 20px;
+}
+
+.modal-synopsis p {
+    margin: 5px 0; /* Réduit l'espacement vertical entre les paragraphes */
 }
 
 /* Section Liste des acteurs */
@@ -299,7 +302,6 @@ h1 {
         /* Réorganisation des sections de la modale en colonnes */
         display: flex;
         flex-direction: column;
-        gap: 20px;
     }
 
     .modal-poster {
