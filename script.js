@@ -136,15 +136,36 @@ async function loadTopRatedMovies(genre, containerSelector) {
         if (genre) container.querySelector('h2').textContent = genre;
 
         const movieGrid = container.querySelector('.movie-grid');
-        movieGrid.innerHTML = results.map(movie => `
-            <div class="movie-item">
-                <img src="${movie.image_url}" alt="Affiche du film ${movie.original_title || movie.title}" class="movie-image" data-movie-id="${movie.id}">
-                <div class="overlay">
-                    <p class="movie-title">${movie.original_title || movie.title}</p>
-                    <button class="button details-button" data-movie-id="${movie.id}">Détails</button>
-                </div>
-            </div>
-        `).join('');
+        movieGrid.textContent = ''; // Efface le contenu existant
+
+        results.forEach(movie => {
+            const movieItem = document.createElement('div');
+            movieItem.className = 'movie-item';
+
+            const img = document.createElement('img');
+            img.src = movie.image_url;
+            img.alt = `Affiche du film ${movie.original_title || movie.title}`;
+            img.className = 'movie-image';
+            img.setAttribute('data-movie-id', movie.id);
+
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+
+            const title = document.createElement('p');
+            title.className = 'movie-title';
+            title.textContent = movie.original_title || movie.title;
+
+            const button = document.createElement('button');
+            button.className = 'button details-button';
+            button.setAttribute('data-movie-id', movie.id);
+            button.textContent = 'Détails';
+
+            overlay.appendChild(title);
+            overlay.appendChild(button);
+            movieItem.appendChild(img);
+            movieItem.appendChild(overlay);
+            movieGrid.appendChild(movieItem);
+        });
 
         // Ajout des événements pour les images des films
         addMovieDetailsEvent('.movie-image', (movie) => toggleModal(true, movie));
