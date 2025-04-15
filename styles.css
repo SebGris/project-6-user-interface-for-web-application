@@ -199,7 +199,6 @@ h1, h2, label, select {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    justify-items: center;
 }
 
 /* Styles pour les éléments de categorie-1 */
@@ -210,8 +209,7 @@ h1, h2, label, select {
 }
 
 .movie-item img {
-    display: block;
-    width: 250px;
+    width: 100%; /* Assure que l'image a la même largeur que l'overlay */
     height: auto;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
