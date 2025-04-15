@@ -1,50 +1,50 @@
 /* Définition des variables CSS */
 :root {
-    --primary-color: #FF0000; /* Rouge principal */
-    --primary-color-hover: #CC0000; /* Rouge foncé pour hover */
-    --secondary-color: #61787f; /* Gris clair */
-    --text-color: #ffffff; /* Blanc pour le texte */
-    --overlay-bg: rgba(0, 0, 0, 0.6); /* Fond gris transparent */
-    --modal-bg: rgba(0, 0, 0, 0.8); /* Fond semi-transparent pour la modale */
-    --button-bg-dark: #000000; /* Noir pour certains boutons */
-    --button-bg-dark-hover: #333333; /* Gris foncé pour hover */
+    --primary-color: #FF0000; /* Couleur principale (rouge) */
+    --primary-color-hover: #CC0000; /* Couleur principale au survol (rouge foncé) */
+    --secondary-color: #61787f; /* Couleur secondaire (gris clair) */
+    --text-color: #ffffff; /* Couleur du texte (blanc) */
+    --overlay-bg: rgba(0, 0, 0, 0.6); /* Fond de l'overlay (gris transparent) */
+    --modal-bg: rgba(0, 0, 0, 0.8); /* Fond de la modale (semi-transparent) */
+    --button-bg-dark: #000000; /* Fond des boutons sombres (noir) */
+    --button-bg-dark-hover: #333333; /* Fond des boutons sombres au survol (gris foncé) */
 }
 
 h1, h2, label, select {
-    font-family: 'Oswald', sans-serif; /* Applique la police Oswald */
-    font-weight: 500; /* Utilise le poids Medium */
-    font-size: 24px;
+    font-family: 'Oswald', sans-serif; /* Police Oswald */
+    font-weight: 500; /* Poids Medium */
+    font-size: 24px; /* Taille de police */
 }
 
 h2 {
-    margin-left: 20px; /* Ajustez la valeur selon vos besoins */
+    margin-left: 20px; /* Marge à gauche */
 }
 
 .logo {
-    display: flex; /* Active le mode flexbox */
-    align-items: center; /* Aligne verticalement le logo et le titre */
-    background-color: var(--secondary-color); /* Utilisation de la variable */
-    color: var(--text-color); /* Utilisation de la variable */
-    padding: 10px; /* Ajoute un peu d'espace autour du contenu */
+    display: flex; /* Mode flexbox */
+    align-items: center; /* Alignement vertical */
+    background-color: var(--secondary-color); /* Couleur de fond */
+    color: var(--text-color); /* Couleur du texte */
+    padding: 10px; /* Espacement interne */
 }
 
 .logo img {
-    width: 100px; /* Réduit la taille du logo */
+    width: 100px; /* Largeur du logo */
     height: auto; /* Conserve les proportions */
-    margin-right: 10px; /* Ajoute un espace entre le logo et le titre */
+    margin-right: 10px; /* Espacement entre le logo et le titre */
 }
 
 .logo h1 {
-    font-size: 36px; /* Ajuste la taille du titre */
-    margin: 0; /* Supprime les marges par défaut */
+    font-size: 36px; /* Taille du titre */
+    margin: 0; /* Suppression des marges */
 }
 
 .movie-frame {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border: 5px solid #000;
-    padding: 10px;
+    display: flex; /* Mode flexbox */
+    align-items: center; /* Alignement vertical */
+    gap: 20px; /* Espacement entre les éléments */
+    border: 5px solid #000; /* Bordure noire */
+    padding: 10px; /* Espacement interne */
     position: relative; /* Nécessaire pour le positionnement absolu */
 }
 
