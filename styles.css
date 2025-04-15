@@ -53,7 +53,7 @@ h1 {
 }
 
 .movie-poster {
-    width: 150px;
+    width: 250px;
     height: auto;
 }
 
@@ -66,6 +66,10 @@ h1 {
 
 .movie-details h2 {
     margin: 0 0 10px 0;
+}
+
+.movie-details .movie-synopsis {
+    font-size: 1.6em; /* Augmentez la taille de police selon vos besoins */
 }
 
 /* Boutons */
@@ -213,9 +217,9 @@ h1 {
 }
 
 .movie-item img {
-    width: 100%; /* Assure que l'image a la même largeur que l'overlay */
-    height: auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Assure que l'image remplit le conteneur */
+    aspect-ratio: 1 / 1; /* Rend les images carrées */
+    object-fit: cover; /* Ajuste l'image pour remplir le carré sans déformation */
     cursor: pointer;
 }
 
@@ -228,7 +232,7 @@ h1 {
     font-size: 18px;
     background: var(--overlay-bg);
     padding: 10px 0;
-    height: 20%;
+    height: 30%;
 }
 
 /* Styles pour le titre du film dans l'overlay */
