@@ -155,7 +155,7 @@ async function loadTopRatedMovies(genre, containerSelector) {
             title.textContent = movie.original_title || movie.title;
 
             const button = document.createElement('button');
-            button.className = 'button details-button';
+            button.className = 'details-button';
             button.setAttribute('data-movie-id', movie.id);
             button.textContent = 'Détails';
 
