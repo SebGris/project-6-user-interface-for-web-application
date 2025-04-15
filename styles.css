@@ -72,13 +72,19 @@ h1 {
     font-size: 1.6em; /* Augmentez la taille de police selon vos besoins */
 }
 
+.movie-details .details-button {
+    padding: 20px 40px; /* Agrandir le bouton */
+    margin: 20px; /* Ajouter un espace autour du bouton */
+    font-size: 1.2em; /* Augmenter la taille du texte */
+}
+
 /* Boutons */
 .details-button, .close-button, .see-more-button, .see-less-button {
     /* Styles communs pour les boutons */
     background-color: var(--primary-color);
     color: var(--text-color);
     border: none;
-    border-radius: 10px; /* Coins arrondis */
+    border-radius: 15px; /* Coins arrondis */
     cursor: pointer;
     font-weight: bold;
     padding: 10px 50px;
@@ -248,7 +254,7 @@ h1 {
     background-color: var(--button-bg-dark);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px;
     padding: 5px 15px;
     font-size: 14px;
     cursor: pointer;
