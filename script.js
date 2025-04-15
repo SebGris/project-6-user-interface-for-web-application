@@ -170,19 +170,25 @@ function addMovieDetailsEvent(selector, callback) {
 // Fonction pour charger les catégories
 async function loadCategories(url) {
     let categories = [];
-    try {
-        while (url) {
+    while (url) {
+        try {
             const data = await fetchData(url);
             categories = [...categories, ...data.results];
             url = data.next;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des catégories :', error);
+            return;
         }
-        const categorySelect = document.getElementById('other-categories');
-        categorySelect.innerHTML = categories.map(category => `
-            <option value="${category.name}">${category.name}</option>
-        `).join('');
-    } catch (error) {
-        console.error('Erreur lors du chargement des catégories :', error);
     }
+
+    const categorySelect = document.getElementById('other-categories');
+    categorySelect.textContent = ''; // Efface les options existantes
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category.name;
+        option.textContent = category.name;
+        categorySelect.appendChild(option);
+    });
 }
 
 // Fonction pour initialiser les événements de redimensionnement
