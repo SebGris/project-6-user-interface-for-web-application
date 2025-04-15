@@ -1,3 +1,15 @@
+/* Définition des variables CSS */
+:root {
+    --primary-color: #FF0000; /* Rouge principal */
+    --primary-color-hover: #CC0000; /* Rouge foncé pour hover */
+    --secondary-color: #61787f; /* Gris clair */
+    --text-color: #ffffff; /* Blanc pour le texte */
+    --overlay-bg: rgba(0, 0, 0, 0.6); /* Fond gris transparent */
+    --modal-bg: rgba(0, 0, 0, 0.8); /* Fond semi-transparent pour la modale */
+    --button-bg-dark: #000000; /* Noir pour certains boutons */
+    --button-bg-dark-hover: #333333; /* Gris foncé pour hover */
+}
+
 h1, h2, label, select {
     font-family: 'Oswald', sans-serif; /* Applique la police Oswald */
     font-weight: 500; /* Utilise le poids Medium */
@@ -7,8 +19,8 @@ h1, h2, label, select {
 .logo {
     display: flex; /* Active le mode flexbox */
     align-items: center; /* Aligne verticalement le logo et le titre */
-    background-color: #61787f; /* Fond gris clair */
-    color: #ffffff; /* Texte en blanc */
+    background-color: var(--secondary-color); /* Utilisation de la variable */
+    color: var(--text-color); /* Utilisation de la variable */
     padding: 10px; /* Ajoute un peu d'espace autour du contenu */
 }
 
@@ -50,8 +62,8 @@ h1, h2, label, select {
 
 /* Classe commune pour les boutons */
 .details-button, .close-button, .see-more-button, .see-less-button {
-    background-color: #FF0000;
-    color: white;
+    background-color: var(--primary-color); /* Utilisation de la variable */
+    color: var(--text-color); /* Utilisation de la variable */
     border: none;
     border-radius: 10px;
     cursor: pointer;
@@ -63,7 +75,7 @@ h1, h2, label, select {
 
 /* Effet hover commun */
 .details-button:hover {
-    background-color: #CC0000;
+    background-color: var(--primary-color-hover); /* Utilisation de la variable */
 }
 
 /* Centrer le bouton Voir plus */
@@ -98,7 +110,7 @@ h1, h2, label, select {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8); /* Fond semi-transparent */
+    background-color: var(--modal-bg); /* Utilisation de la variable */
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -166,12 +178,12 @@ h1, h2, label, select {
     border: none;
     font-size: 24px;
     font-weight: bold;
-    color: #FF0000;
+    color: var(--primary-color); /* Utilisation de la variable */
     cursor: pointer;
 }
 
 .modal-x-close:hover {
-    color: #CC0000; /* Change la couleur au survol */
+    color: var(--primary-color-hover); /* Utilisation de la variable */
 }
 
 /* Styles par défaut (Desktop) */
@@ -205,7 +217,7 @@ h1, h2, label, select {
     left: 0;
     right: 0;
     font-size: 18px;
-    background: rgba(0, 0, 0, 0.6); /* Fond gris transparent */
+    background: var(--overlay-bg); /* Utilisation de la variable */
     padding: 10px 0;
 }
 
@@ -219,7 +231,7 @@ h1, h2, label, select {
 
 /* Bouton dans le bandeau */
 .movie-item .overlay .details-button {
-    background-color: #000000;
+    background-color: var(--button-bg-dark); /* Utilisation de la variable */
     color: white;
     border: none;
     border-radius: 5px;
@@ -230,7 +242,7 @@ h1, h2, label, select {
 
 /* Effet hover pour le bouton */
 .movie-item .overlay .details-button:hover {
-    background-color: #333333; /* Gris foncé pour l'effet hover */
+    background-color: var(--button-bg-dark-hover); /* Utilisation de la variable */
 }
 
 /* Ajout d'un espacement sous la liste déroulante */
@@ -238,96 +250,91 @@ h1, h2, label, select {
     margin-bottom: 20px; /* Ajustez la valeur selon vos besoins */
 }
 
-/* Styles pour Tablet (768px et moins) */
+/* Media queries regroupées */
 @media (max-width: 768px) {
     .logo {
-        flex-direction: column; /* Empile le logo et le titre */
+        flex-direction: column;
         text-align: center;
     }
 
     .movie-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 colonnes pour Tablet */
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .movie-frame {
-        flex-direction: column; /* Empile l'affiche et les détails */
+        flex-direction: column;
         align-items: center;
     }
 
     .movie-poster {
-        width: 120px; /* Réduit la taille de l'affiche */
+        width: 120px;
     }
 
     .see-more-button {
-        display: block; /* Affiche le bouton sur écran Tablet */
+        display: block;
     }
 
     .modal-x-close {
-        display: block; /* Affiche le bouton de fermeture sur Tablet */
-        font-size: 40px; /* Réduit la taille de la croix */
-        top: 5px; /* Ajuste la position verticale */
-        right: 5px; /* Ajuste la position horizontale */
+        display: block;
+        font-size: 40px;
+        top: 5px;
+        right: 5px;
     }
-    
+
     .close-button {
-        display: none; /* Masque le bouton de détails sur Tablet */
+        display: none;
     }
 
     .movie-item:nth-child(-n+4) {
-        display: block; /* Affiche les 4 premiers films sur Tablet */
-    }
-}
-
-/* Styles pour Mobile (480px et moins) */
-@media (max-width: 480px) {
-    .logo img {
-        width: 80px; /* Réduit encore la taille du logo */
+        display: block;
     }
 
-    .movie-grid {
-        grid-template-columns: 1fr; /* 1 colonne pour Mobile */
-    }
-
-    .movie-frame {
-        flex-direction: column; /* Empile tout verticalement */
-        text-align: center;
-    }
-
+    /* Styles communs pour les titres */
     h1 {
-        display: none; /* Masque le titre h1 sur les écrans mobiles */
+        display: none;
     }
 
     h2 {
-        font-size: 20px; /* Réduit la taille des sous-titres */
-    }
-
-    .see-more-button {
-        display: block; /* Affiche le bouton sur écran Mobile */
-        padding: 8px 20px; /* Réduit la taille des boutons */
-        font-size: 14px;
-    }
-
-    .modal-x-close {
-        display: block; /* Affiche le bouton de fermeture sur Mobile */
-        font-size: 40px; /* Réduit la taille de la croix */
-        top: 5px; /* Ajuste la position verticale */
-        right: 5px; /* Ajuste la position horizontale */
-    }
-
-    .close-button {
-        display: none; /* Masque le bouton de détails sur Mobile */
-    }
-
-    .movie-item:nth-child(-n+2) {
-        display: block; /* Affiche les 2 premiers films sur Mobile */
+        font-size: 20px;
     }
 }
 
-/* Affiche tous les films sur Desktop */
+@media (max-width: 480px) {
+    .logo img {
+        width: 80px;
+    }
+
+    .movie-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .movie-frame {
+        text-align: center;
+    }
+
+    .see-more-button {
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+
+    .movie-item:nth-child(-n+2) {
+        display: block;
+    }
+
+    /* Styles communs pour les titres */
+    h1 {
+        display: none;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}
+
 @media (min-width: 769px) {
     body {
-        width: 1030px; /* Largeur fixe */
-        margin: 0 auto; /* Centrer la page horizontalement */
+        width: 1030px;
+        margin: 0 auto;
     }
 
     .movie-item {
