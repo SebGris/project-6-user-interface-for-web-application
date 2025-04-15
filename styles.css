@@ -114,6 +114,8 @@ h1, h2, label, select {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    overflow-y: auto; /* Ajoute une barre de défilement verticale */
+    overflow-x: hidden; /* Empêche le défilement horizontal */
 }
 
 .modal-content {
@@ -264,10 +266,6 @@ h1, h2, label, select {
         align-items: center;
     }
 
-    .movie-poster {
-        width: 120px;
-    }
-
     .see-more-button {
         display: block;
     }
@@ -295,6 +293,16 @@ h1, h2, label, select {
 
     .modal-actors {
         order: 3;
+    }
+
+    .modal-poster img {
+        width: 100%; /* L'image occupe toute la largeur */
+        height: auto; /* Conserve les proportions */
+    }
+
+    .modal-content {
+        width: 100%; /* La fenêtre modale occupe toute la largeur */
+        max-width: none; /* Supprime la limite de largeur */
     }
 }
 
@@ -325,9 +333,19 @@ h1, h2, label, select {
         justify-content: center; /* Centre l'affiche horizontalement */
         order: 2; /* Place l'affiche en bas */
     }
-    
+
     .modal-actors {
         order: 3;
+    }
+
+    .modal-poster img {
+        width: 100%; /* L'image occupe toute la largeur */
+        height: auto; /* Conserve les proportions */
+    }
+
+    .modal-content {
+        width: 100%; /* La fenêtre modale occupe toute la largeur */
+        max-width: none; /* Supprime la limite de largeur */
     }
 }
 
