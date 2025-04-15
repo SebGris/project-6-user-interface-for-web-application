@@ -302,6 +302,16 @@ h2 {
         font-size: 20px;
         margin-left: 20px; /* Ajustez la valeur selon vos besoins */
     }
+
+    .modal-poster {
+        grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+        justify-content: center; /* Centre l'affiche horizontalement */
+        order: 2; /* Place l'affiche en bas */
+    }
+
+    .modal-actors {
+        order: 3; /* Place l'affiche en bas */
+    }
 }
 
 @media (max-width: 480px) {
@@ -334,6 +344,16 @@ h2 {
     h2 {
         font-size: 20px;
         margin-left: 20px; /* Ajustez la valeur selon vos besoins */
+    }
+
+    .modal-poster {
+        grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+        justify-content: center; /* Centre l'affiche horizontalement */
+        order: 2; /* Place l'affiche en bas */
+    }
+    
+    .modal-actors {
+        order: 3; /* Place l'affiche en bas */
     }
 }
 
