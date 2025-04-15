@@ -123,20 +123,19 @@ function updateMovieVisibility(containerSelector) {
 
 // Fonction pour charger les 6 films les mieux notés
 async function loadTopRatedMovies(genre, containerSelector) {
+    const container = document.querySelector(containerSelector);
+    if (genre) container.querySelector('h2').textContent = genre;
+    
+    const movieGrid = container.querySelector('.movie-grid');
+    movieGrid.textContent = ''; // Efface le contenu existant
+    
     // La première URL récupère les 5 premiers films, la deuxième URL (avec page=2) récupère les 5 films suivants
     const baseUrls = [`${API.baseUrl}?sort_by=-imdb_score`, `${API.baseUrl}?page=2&sort_by=-imdb_score`];
     const urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
-
     try {
         const results = (await Promise.all(urls.map(fetchData)))
             .flatMap(data => data.results)
             .slice(0, 6);
-
-        const container = document.querySelector(containerSelector);
-        if (genre) container.querySelector('h2').textContent = genre;
-
-        const movieGrid = container.querySelector('.movie-grid');
-        movieGrid.textContent = ''; // Efface le contenu existant
 
         results.forEach(movie => {
             const movieItem = document.createElement('div');
@@ -166,16 +165,16 @@ async function loadTopRatedMovies(genre, containerSelector) {
             movieItem.appendChild(overlay);
             movieGrid.appendChild(movieItem);
         });
-
-        // Ajout des événements pour les images des films
-        addMovieDetailsEvent('.movie-image', (movie) => toggleModal(true, movie));
-        addMovieDetailsEvent('.details-button', (movie) => toggleModal(true, movie));
-
-        // Met à jour l'affichage des films en fonction de la taille de l'écran
-        updateMovieVisibility(containerSelector);
     } catch (error) {
         console.error('Erreur lors du chargement des films les mieux notés :', error);
     }
+
+    // Ajout des événements pour les images des films
+    addMovieDetailsEvent('.movie-image', (movie) => toggleModal(true, movie));
+    addMovieDetailsEvent('.details-button', (movie) => toggleModal(true, movie));
+
+    // Met à jour l'affichage des films en fonction de la taille de l'écran
+    updateMovieVisibility(containerSelector);
 }
 
 function addMovieDetailsEvent(selector, callback) {
