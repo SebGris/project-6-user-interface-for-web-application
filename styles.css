@@ -11,37 +11,38 @@
 }
 
 h1, h2, label, select {
-    font-family: 'Oswald', sans-serif; /* Police Oswald */
-    font-weight: 500; /* Poids Medium */
-    font-size: 24px; /* Taille de police */
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
 }
 
+/* Logo et en-tête */
 .logo {
-    display: flex; /* Mode flexbox */
-    align-items: center; /* Alignement vertical */
-    background-color: var(--secondary-color); /* Couleur de fond */
-    color: var(--text-color); /* Couleur du texte */
-    padding: 10px; /* Espacement interne */
+    display: flex;
+    align-items: center;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 10px;
 }
 
 .logo img {
-    width: 100px; /* Largeur du logo */
-    height: auto; /* Conserve les proportions */
-    margin-right: 10px; /* Espacement entre le logo et le titre */
+    width: 100px;
+    margin-right: 10px;
 }
 
 .logo h1 {
-    font-size: 36px; /* Taille du titre */
-    margin: 0; /* Suppression des marges */
+    font-size: 36px;
+    margin: 0;
 }
 
+/* Cadre du film */
 .movie-frame {
-    display: flex; /* Mode flexbox */
-    align-items: center; /* Alignement vertical */
-    gap: 20px; /* Espacement entre les éléments */
-    border: 5px solid #000; /* Bordure noire */
-    padding: 10px; /* Espacement interne */
-    position: relative; /* Nécessaire pour le positionnement absolu */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 5px solid #000;
+    padding: 10px;
+    position: relative;
 }
 
 .movie-poster {
@@ -57,65 +58,64 @@ h1, h2, label, select {
 }
 
 .movie-details h3 {
-    margin: 0 0 10px 0; /* Espacement entre le titre et le bouton */
+    margin: 0 0 10px 0;
 }
 
-/* Classe commune pour les boutons */
+/* Boutons */
 .details-button, .close-button, .see-more-button, .see-less-button {
-    background-color: var(--primary-color); /* Utilisation de la variable */
-    color: var(--text-color); /* Utilisation de la variable */
+    background-color: var(--primary-color);
+    color: var(--text-color);
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    font-weight: bold; /* Texte en gras */
+    font-weight: bold;
     padding: 10px 50px;
     font-size: 16px;
     text-align: center;
 }
 
-/* Effet hover commun */
 .details-button:hover {
-    background-color: var(--primary-color-hover); /* Utilisation de la variable */
+    background-color: var(--primary-color-hover);
 }
 
-/* Centrer le bouton Voir plus */
+/* Boutons spécifiques */
 .see-more-button, .see-less-button {
-    display: none; /* Masque le bouton sur écran Desktop */
+    display: none;
     margin: 0 auto;
 }
 
-/* Styles spécifiques au bouton "Fermer" */
 .close-button {
-    margin: 20px auto 0; /* Centré horizontalement */
-    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+    margin: 20px auto 0;
+    grid-column: 1 / -1;
 }
 
-/* Styles spécifiques au bouton "Détails" */
 .details-button {
-    align-self: flex-end; /* Aligne le bouton à droite */
-    padding: 10px 25px; /* Ajuste la taille */
+    align-self: flex-end;
+    padding: 10px 25px;
     position: absolute;
-    right: 10px; /* Ajustez la valeur selon vos besoins */
-    bottom: 10px; /* Ajustez la valeur selon vos besoins */
+    right: 10px;
+    bottom: 10px;
 }
 
+/* Section des films les mieux notés */
 #top-rated-movies {
     margin: 20px 0;
 }
 
+/* Modale */
 .modal {
-    display: none; /* Cachée par défaut */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--modal-bg); /* Utilisation de la variable */
+    background-color: var(--modal-bg);
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    overflow-y: auto; /* Ajoute une barre de défilement verticale */
-    overflow-x: hidden; /* Empêche le défilement horizontal */
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .modal-content {
@@ -132,47 +132,47 @@ h1, h2, label, select {
 /* Conteneur principal des sections */
 .modal-sections {
     display: grid;
-    grid-template-columns: 2fr 1fr; /* Deux colonnes : contenu (titre) à gauche et affiche à droite */
-    gap: 20px; /* Espacement entre les colonnes */
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
     width: 100%;
     padding: 10px;
-    box-sizing: border-box; /* Inclut la bordure et le padding dans la largeur totale */
-    align-items: start; /* Aligne les éléments verticalement en haut */
+    box-sizing: border-box;
+    align-items: start;
 }
 
 /* Section Titre du film */
 .modal-title {
-    grid-column: 1; /* Place le titre dans la première colonne */
+    grid-column: 1;
 }
 
 .modal-title p {
-    margin: 0; /* Supprime les marges par défaut */
-    line-height: 1.2; /* Réduit l'espacement entre les lignes */
-    font-weight: bold; /* Met le texte en gras */
+    margin: 0;
+    line-height: 1.2;
+    font-weight: bold;
 }
 
 /* Section Affiche */
 .modal-poster {
-    grid-column: 2; /* Place l'affiche dans la deuxième colonne */
+    grid-column: 2;
     display: flex;
-    justify-content: center; /* Centre l'image horizontalement */
-    align-items: flex-start; /* Aligne l'image en haut */
+    justify-content: center;
+    align-items: flex-start;
 }
 
 /* Section Réalisé par et Synopsis */
 .modal-synopsis {
-    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+    grid-column: 1 / -1;
     margin-bottom: 20px;
 }
 
 /* Section Liste des acteurs */
 .modal-actors {
-    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+    grid-column: 1 / -1;
 }
 
 /* Bouton de fermeture (croix) */
 .modal-x-close {
-    display: none; /* Masque le Bouton de fermeture (croix) sur les écrans desktop */
+    display: none;
     position: absolute;
     top: 10px;
     right: 10px;
@@ -180,44 +180,44 @@ h1, h2, label, select {
     border: none;
     font-size: 24px;
     font-weight: bold;
-    color: var(--primary-color); /* Utilisation de la variable */
+    color: var(--primary-color);
     cursor: pointer;
 }
 
 .modal-x-close:hover {
-    color: var(--primary-color-hover); /* Utilisation de la variable */
+    color: var(--primary-color-hover);
 }
 
 .movie-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colonnes */
-    gap: 20px; /* Espacement entre les éléments */
-    justify-items: center; /* Centre les éléments horizontalement */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    justify-items: center;
 }
 
 /* Styles pour les éléments de categorie-1 */
 .movie-item {
-    position: relative; /* Nécessaire pour positionner l'overlay */
-    overflow: hidden; /* Empêche le contenu de dépasser */
-    display: none; /* Masque les films par défaut */
+    position: relative;
+    overflow: hidden;
+    display: none;
 }
 
 .movie-item img {
-    display: block; /* Affiche l'image comme un bloc */
-    width: 250px; /* Largeur des affiches */
+    display: block;
+    width: 250px;
     height: auto;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre légère */
-    cursor: pointer; /* Change l'icône de la souris en pointeur */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 
 /* Bandeau transparent gris */
 .movie-item .overlay {
     position: absolute;
-    top: 30px; /* Place le bandeau à 10px du haut de l'image */
+    top: 30px;
     left: 0;
     right: 0;
     font-size: 18px;
-    background: var(--overlay-bg); /* Utilisation de la variable */
+    background: var(--overlay-bg);
     padding: 10px 0;
 }
 
@@ -231,7 +231,7 @@ h1, h2, label, select {
 
 /* Bouton dans le bandeau */
 .movie-item .overlay .details-button {
-    background-color: var(--button-bg-dark); /* Utilisation de la variable */
+    background-color: var(--button-bg-dark);
     color: white;
     border: none;
     border-radius: 5px;
@@ -242,15 +242,15 @@ h1, h2, label, select {
 
 /* Effet hover pour le bouton */
 .movie-item .overlay .details-button:hover {
-    background-color: var(--button-bg-dark-hover); /* Utilisation de la variable */
+    background-color: var(--button-bg-dark-hover);
 }
 
 /* Ajout d'un espacement sous la liste déroulante */
 #other-category select {
-    margin-bottom: 20px; /* Ajustez la valeur selon vos besoins */
+    margin-bottom: 20px;
 }
 
-/* Media queries regroupées */
+/* Media queries */
 @media (max-width: 768px) {
     .logo {
         flex-direction: column;
@@ -266,24 +266,27 @@ h1, h2, label, select {
         align-items: center;
     }
 
-    .modal-sections {
-        display: flex; /* Remplace l'affichage en grille par un affichage flex */
-        flex-direction: column; /* Les sections s'affichent en colonne */
-        gap: 20px; /* Espacement entre les sections */
+    .modal-sections,
+    .modal-poster,
+    .modal-synopsis,
+    .modal-actors {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
 
     .modal-poster {
-        justify-content: center; /* Centre l'image horizontalement */
-        align-items: center; /* Centre l'image verticalement */
-        order: 2; /* Place l'image après le synopsis */
+        justify-content: center;
+        align-items: center;
+        order: 2;
     }
 
     .modal-synopsis {
-        order: 1; /* Place le synopsis avant l'image */
+        order: 1;
     }
 
     .modal-actors {
-        order: 3; /* Place la liste des acteurs après l'image */
+        order: 3;
     }
 
     .see-more-button {
@@ -319,26 +322,6 @@ h1, h2, label, select {
         text-align: center;
     }
 
-    .modal-sections {
-        display: flex; /* Remplace l'affichage en grille par un affichage flex */
-        flex-direction: column; /* Les sections s'affichent en colonne */
-        gap: 20px; /* Espacement entre les sections */
-    }
-
-    .modal-poster {
-        justify-content: center; /* Centre l'image horizontalement */
-        align-items: center; /* Centre l'image verticalement */
-        order: 2; /* Place l'image après le synopsis */
-    }
-
-    .modal-synopsis {
-        order: 1; /* Place le synopsis avant l'image */
-    }
-    
-    .modal-actors {
-        order: 3; /* Place la liste des acteurs après l'image */
-    }
-    
     .see-more-button {
         padding: 8px 20px;
         font-size: 14px;
@@ -365,5 +348,5 @@ h1, h2, label, select {
 }
 
 #other-category h2 {
-    display: none; /* Masque le titre de la section Autres catégories */
+    display: none;
 }
