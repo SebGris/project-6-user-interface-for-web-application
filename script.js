@@ -150,7 +150,7 @@ async function loadTopRatedMovies(genre, containerSelector) {
             const overlay = document.createElement('div');
             overlay.className = 'overlay';
 
-            const title = document.createElement('p');
+            const title = document.createElement('h1');
             title.className = 'movie-title';
             title.textContent = movie.original_title || movie.title;
 
