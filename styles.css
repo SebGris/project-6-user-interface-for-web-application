@@ -16,11 +16,6 @@ h1, h2, label, select {
     font-size: 24px; /* Taille de police */
 }
 
-h2 {
-    font-size: 20px;
-    margin-left: 20px; /* Marge à gauche */
-}
-
 .logo {
     display: flex; /* Mode flexbox */
     align-items: center; /* Alignement vertical */
@@ -191,8 +186,6 @@ h2 {
     color: var(--primary-color-hover); /* Utilisation de la variable */
 }
 
-/* Styles par défaut (Desktop) */
-
 .movie-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 colonnes */
@@ -295,13 +288,13 @@ h2 {
     }
 
     .modal-poster {
-        grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+        grid-column: 1 / -1; /* Étend sur les deux colonnes */
         justify-content: center; /* Centre l'affiche horizontalement */
         order: 2; /* Place l'affiche en bas */
     }
 
     .modal-actors {
-        order: 3; /* Place l'affiche en bas */
+        order: 3;
     }
 }
 
@@ -328,13 +321,13 @@ h2 {
     }
 
     .modal-poster {
-        grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+        grid-column: 1 / -1; /* Étend sur les deux colonnes */
         justify-content: center; /* Centre l'affiche horizontalement */
         order: 2; /* Place l'affiche en bas */
     }
     
     .modal-actors {
-        order: 3; /* Place l'affiche en bas */
+        order: 3;
     }
 }
 
