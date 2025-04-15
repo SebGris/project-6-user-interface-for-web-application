@@ -23,12 +23,6 @@ h1, h2, label, select {
     margin: 0; /* Supprime les marges par défaut */
 }
 
-/* Fixer la largeur de la page */
-body {
-    width: 1030px; /* Largeur fixe */
-    margin: 0 auto; /* Centrer la page horizontalement */
-}
-
 .movie-frame {
     display: flex;
     align-items: center;
@@ -55,7 +49,7 @@ body {
 }
 
 /* Classe commune pour les boutons */
-.button {
+.details-button, .see-more-button, .see-less-button {
     background-color: #FF0000;
     color: white;
     border: none;
@@ -68,18 +62,12 @@ body {
 }
 
 /* Effet hover commun */
-.button:hover {
+.details-button:hover {
     background-color: #CC0000;
 }
 
 /* Centrer le bouton Voir plus */
-.see-more-button {
-    display: block;
-    margin: 0 auto;
-    display: none; /* Masque le bouton sur écran Desktop */
-}
-
-.see-less-button {
+.see-more-button, .see-less-button {
     display: block;
     margin: 0 auto;
     display: none; /* Masque le bouton sur écran Desktop */
@@ -154,13 +142,6 @@ body {
     grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
 }
 
-.modal-button {
-    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
-    display: flex;
-    justify-content: center; /* Centre le bouton horizontalement */
-    margin-top: 20px; /* Ajoute un espace au-dessus du bouton */
-}
-
 /* Bouton de fermeture (croix) */
 .modal-x-close {
     display: none; /* Masque le Bouton de fermeture (croix) sur les écrans desktop */
@@ -190,8 +171,11 @@ body {
 
 /* Styles spécifiques au bouton "Fermer" */
 .close-button {
-    display: block;
+    display: flex;
     margin: 20px auto 0; /* Centré horizontalement */
+    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+    justify-content: center; /* Centre le bouton horizontalement */
+    margin-top: 20px; /* Ajoute un espace au-dessus du bouton */
 }
 
 /* Styles par défaut (Desktop) */
@@ -289,7 +273,7 @@ body {
         right: 5px; /* Ajuste la position horizontale */
     }
     
-    .modal-button {
+    .close-button {
         display: none; /* Masque le bouton de détails sur Tablet */
     }
 
@@ -321,13 +305,10 @@ body {
         font-size: 20px; /* Réduit la taille des sous-titres */
     }
 
-    .button {
-        padding: 8px 20px; /* Réduit la taille des boutons */
-        font-size: 14px;
-    }
-    
     .see-more-button {
         display: block; /* Affiche le bouton sur écran Mobile */
+        padding: 8px 20px; /* Réduit la taille des boutons */
+        font-size: 14px;
     }
 
     .modal-x-close {
@@ -337,7 +318,7 @@ body {
         right: 5px; /* Ajuste la position horizontale */
     }
 
-    .modal-button {
+    .close-button {
         display: none; /* Masque le bouton de détails sur Mobile */
     }
 
@@ -348,9 +329,15 @@ body {
 
 /* Affiche tous les films sur Desktop */
 @media (min-width: 769px) {
+    body {
+        width: 1030px; /* Largeur fixe */
+        margin: 0 auto; /* Centrer la page horizontalement */
+    }
+
     .movie-item {
         display: block;
     }
+
     .see-more-button, .see-less-button {
         display: none;
     }
