@@ -49,7 +49,7 @@ h1, h2, label, select {
 }
 
 /* Classe commune pour les boutons */
-.details-button, .see-more-button, .see-less-button {
+.details-button, .close-button, .see-more-button, .see-less-button {
     background-color: #FF0000;
     color: white;
     border: none;
@@ -68,9 +68,23 @@ h1, h2, label, select {
 
 /* Centrer le bouton Voir plus */
 .see-more-button, .see-less-button {
-    display: block;
-    margin: 0 auto;
     display: none; /* Masque le bouton sur écran Desktop */
+    margin: 0 auto;
+}
+
+/* Styles spécifiques au bouton "Fermer" */
+.close-button {
+    margin: 20px auto 0; /* Centré horizontalement */
+    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
+}
+
+/* Styles spécifiques au bouton "Détails" */
+.details-button {
+    align-self: flex-end; /* Aligne le bouton à droite */
+    padding: 10px 25px; /* Ajuste la taille */
+    position: absolute;
+    right: 10px; /* Ajustez la valeur selon vos besoins */
+    bottom: 10px; /* Ajustez la valeur selon vos besoins */
 }
 
 #top-rated-movies {
@@ -158,24 +172,6 @@ h1, h2, label, select {
 
 .modal-x-close:hover {
     color: #CC0000; /* Change la couleur au survol */
-}
-
-/* Styles spécifiques au bouton "Détails" */
-.details-button {
-    align-self: flex-end; /* Aligne le bouton à droite */
-    padding: 10px 25px; /* Ajuste la taille */
-    position: absolute;
-    right: 10px; /* Ajustez la valeur selon vos besoins */
-    bottom: 10px; /* Ajustez la valeur selon vos besoins */
-}
-
-/* Styles spécifiques au bouton "Fermer" */
-.close-button {
-    display: flex;
-    margin: 20px auto 0; /* Centré horizontalement */
-    grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
-    justify-content: center; /* Centre le bouton horizontalement */
-    margin-top: 20px; /* Ajoute un espace au-dessus du bouton */
 }
 
 /* Styles par défaut (Desktop) */
