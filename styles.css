@@ -266,6 +266,17 @@ h1, h2, label, select {
         align-items: center;
     }
 
+    .modal-sections {
+        display: flex; /* Remplace l'affichage en grille par un affichage flex */
+        flex-direction: column; /* Les sections s'affichent en colonne */
+        gap: 20px; /* Espacement entre les sections */
+    }
+
+    .modal-poster {
+        justify-content: center; /* Centre l'image horizontalement */
+        align-items: center; /* Centre l'image verticalement */
+    }
+
     .see-more-button {
         display: block;
     }
@@ -284,7 +295,6 @@ h1, h2, label, select {
     .movie-item:nth-child(-n+4) {
         display: block;
     }
-
 }
 
 @media (max-width: 480px) {
@@ -300,6 +310,17 @@ h1, h2, label, select {
         text-align: center;
     }
 
+    .modal-sections {
+        display: flex; /* Remplace l'affichage en grille par un affichage flex */
+        flex-direction: column; /* Les sections s'affichent en colonne */
+        gap: 20px; /* Espacement entre les sections */
+    }
+
+    .modal-poster {
+        justify-content: center; /* Centre l'image horizontalement */
+        align-items: center; /* Centre l'image verticalement */
+    }
+
     .see-more-button {
         padding: 8px 20px;
         font-size: 14px;
@@ -308,7 +329,6 @@ h1, h2, label, select {
     .movie-item:nth-child(-n+2) {
         display: block;
     }
-
 }
 
 @media (min-width: 769px) {
