@@ -17,6 +17,10 @@ h1, h2, label, select {
     font-size: 24px;
 }
 
+h1 {
+    padding-left: 20px; /* Ajustez la valeur selon vos besoins */
+}
+
 /* Logo et en-tête */
 .logo {
     /* Utilisation de flexbox pour aligner le logo et le texte horizontalement */
@@ -24,7 +28,7 @@ h1, h2, label, select {
     align-items: center;
     background-color: var(--secondary-color);
     color: var(--text-color);
-    padding: 10px;
+    padding: 15px;
 }
 
 .logo img {
@@ -60,7 +64,7 @@ h1, h2, label, select {
     text-align: left;
 }
 
-.movie-details h3 {
+.movie-details h2 {
     margin: 0 0 10px 0;
 }
 
@@ -319,10 +323,6 @@ h1, h2, label, select {
 }
 
 @media (max-width: 480px) {
-    .logo img {
-        width: 80px;
-    }
-
     .movie-grid {
         grid-template-columns: 1fr;
     }
@@ -338,6 +338,10 @@ h1, h2, label, select {
 
     .movie-item:nth-child(-n+2) {
         display: block;
+    }
+
+    h1 {
+        display: none;
     }
 }
 
