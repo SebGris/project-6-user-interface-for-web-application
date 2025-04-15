@@ -275,6 +275,15 @@ h1, h2, label, select {
     .modal-poster {
         justify-content: center; /* Centre l'image horizontalement */
         align-items: center; /* Centre l'image verticalement */
+        order: 2; /* Place l'image après le synopsis */
+    }
+
+    .modal-synopsis {
+        order: 1; /* Place le synopsis avant l'image */
+    }
+
+    .modal-actors {
+        order: 3; /* Place la liste des acteurs après l'image */
     }
 
     .see-more-button {
@@ -319,8 +328,17 @@ h1, h2, label, select {
     .modal-poster {
         justify-content: center; /* Centre l'image horizontalement */
         align-items: center; /* Centre l'image verticalement */
+        order: 2; /* Place l'image après le synopsis */
     }
 
+    .modal-synopsis {
+        order: 1; /* Place le synopsis avant l'image */
+    }
+    
+    .modal-actors {
+        order: 3; /* Place la liste des acteurs après l'image */
+    }
+    
     .see-more-button {
         padding: 8px 20px;
         font-size: 14px;
