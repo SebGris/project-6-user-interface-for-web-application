@@ -17,6 +17,7 @@ h1, h2, label, select {
 }
 
 h2 {
+    font-size: 20px;
     margin-left: 20px; /* Marge à gauche */
 }
 
@@ -293,16 +294,6 @@ h2 {
         display: block;
     }
 
-    /* Styles communs pour les titres */
-    h1 {
-        display: none;
-    }
-
-    h2 {
-        font-size: 20px;
-        margin-left: 20px; /* Ajustez la valeur selon vos besoins */
-    }
-
     .modal-poster {
         grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
         justify-content: center; /* Centre l'affiche horizontalement */
@@ -336,16 +327,6 @@ h2 {
         display: block;
     }
 
-    /* Styles communs pour les titres */
-    h1 {
-        display: none;
-    }
-
-    h2 {
-        font-size: 20px;
-        margin-left: 20px; /* Ajustez la valeur selon vos besoins */
-    }
-
     .modal-poster {
         grid-column: 1 / -1; /* Étend le bouton sur les deux colonnes */
         justify-content: center; /* Centre l'affiche horizontalement */
@@ -373,5 +354,5 @@ h2 {
 }
 
 #other-category h2 {
-    display: none; /* Masque le titre h2 de la section Autres catégories */
+    display: none; /* Masque le titre de la section Autres catégories */
 }
