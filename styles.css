@@ -1,5 +1,6 @@
 /* Définition des variables CSS */
 :root {
+    /* Les variables permettent de centraliser les couleurs et de faciliter leur réutilisation */
     --primary-color: #FF0000; /* Couleur principale (rouge) */
     --primary-color-hover: #CC0000; /* Couleur principale au survol (rouge foncé) */
     --secondary-color: #61787f; /* Couleur secondaire (gris clair) */
@@ -18,6 +19,7 @@ h1, h2, label, select {
 
 /* Logo et en-tête */
 .logo {
+    /* Utilisation de flexbox pour aligner le logo et le texte horizontalement */
     display: flex;
     align-items: center;
     background-color: var(--secondary-color);
@@ -37,12 +39,13 @@ h1, h2, label, select {
 
 /* Cadre du film */
 .movie-frame {
+    /* Flexbox pour aligner les éléments du cadre horizontalement */
     display: flex;
     align-items: center;
-    gap: 20px;
-    border: 5px solid #000;
+    gap: 20px; /* Espacement entre les éléments */
+    border: 5px solid var(--button-bg-dark); /* Bordure noire */
     padding: 10px;
-    position: relative;
+    position: relative; /* Nécessaire pour positionner le bouton "details" */
 }
 
 .movie-poster {
@@ -63,10 +66,11 @@ h1, h2, label, select {
 
 /* Boutons */
 .details-button, .close-button, .see-more-button, .see-less-button {
+    /* Styles communs pour les boutons */
     background-color: var(--primary-color);
     color: var(--text-color);
     border: none;
-    border-radius: 10px;
+    border-radius: 10px; /* Coins arrondis */
     cursor: pointer;
     font-weight: bold;
     padding: 10px 50px;
@@ -90,6 +94,7 @@ h1, h2, label, select {
 }
 
 .details-button {
+    /* Positionnement spécifique pour le bouton "details" */
     align-self: flex-end;
     padding: 10px 25px;
     position: absolute;
@@ -104,18 +109,19 @@ h1, h2, label, select {
 
 /* Modale */
 .modal {
+    /* La modale est initialement masquée */
     display: none;
-    position: fixed;
+    position: fixed; /* Fixée par rapport à la fenêtre */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--modal-bg);
+    background-color: var(--modal-bg); /* Fond semi-transparent */
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-    overflow-y: auto;
-    overflow-x: hidden;
+    z-index: 1000; /* Priorité d'affichage élevée */
+    overflow-y: auto; /* Permet le défilement vertical */
+    overflow-x: hidden; /* Désactive le défilement horizontal */
 }
 
 .modal-content {
@@ -131,13 +137,14 @@ h1, h2, label, select {
 
 /* Conteneur principal des sections */
 .modal-sections {
+    /* Grille pour organiser les sections de la modale */
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    grid-template-columns: 2fr 1fr; /* Deux colonnes avec des proportions différentes */
+    gap: 20px; /* Espacement entre les colonnes */
     width: 100%;
     padding: 10px;
-    box-sizing: border-box;
-    align-items: start;
+    box-sizing: border-box; /* Inclut le padding dans la largeur totale */
+    align-items: start; /* Aligne les éléments en haut */
 }
 
 /* Section Titre du film */
@@ -253,11 +260,13 @@ h1, h2, label, select {
 /* Media queries */
 @media (max-width: 768px) {
     .logo {
+        /* Réorganisation du logo pour les petits écrans */
         flex-direction: column;
         text-align: center;
     }
 
     .movie-grid {
+        /* Réduction du nombre de colonnes pour les petits écrans */
         grid-template-columns: repeat(2, 1fr);
     }
 
@@ -270,6 +279,7 @@ h1, h2, label, select {
     .modal-poster,
     .modal-synopsis,
     .modal-actors {
+        /* Réorganisation des sections de la modale en colonnes */
         display: flex;
         flex-direction: column;
         gap: 20px;
