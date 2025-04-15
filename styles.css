@@ -285,25 +285,6 @@ h1, h2, label, select {
         display: block;
     }
 
-    .modal-poster {
-        grid-column: 1 / -1; /* Étend sur les deux colonnes */
-        justify-content: center; /* Centre l'affiche horizontalement */
-        order: 2; /* Place l'affiche en bas */
-    }
-
-    .modal-actors {
-        order: 3;
-    }
-
-    .modal-poster img {
-        width: 100%; /* L'image occupe toute la largeur */
-        height: auto; /* Conserve les proportions */
-    }
-
-    .modal-content {
-        width: 100%; /* La fenêtre modale occupe toute la largeur */
-        max-width: none; /* Supprime la limite de largeur */
-    }
 }
 
 @media (max-width: 480px) {
@@ -328,25 +309,6 @@ h1, h2, label, select {
         display: block;
     }
 
-    .modal-poster {
-        grid-column: 1 / -1; /* Étend sur les deux colonnes */
-        justify-content: center; /* Centre l'affiche horizontalement */
-        order: 2; /* Place l'affiche en bas */
-    }
-
-    .modal-actors {
-        order: 3;
-    }
-
-    .modal-poster img {
-        width: 100%; /* L'image occupe toute la largeur */
-        height: auto; /* Conserve les proportions */
-    }
-
-    .modal-content {
-        width: 100%; /* La fenêtre modale occupe toute la largeur */
-        max-width: none; /* Supprime la limite de largeur */
-    }
 }
 
 @media (min-width: 769px) {
