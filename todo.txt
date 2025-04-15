@@ -1,0 +1,20 @@
+    Design
+        [Projet 6] Ajouter padding pour éviter que le site s'étale trop en largeur
+        [Projet 6] Alignement du titre de la catégorie avec le premier film
+        [Projet 6] Corriger le problème de police dans la modale
+        [Projet 6] Vider la section meilleur film
+    Logique 
+        [Projet 6] Mettre à jour les boutons Voir plus / Voir moins quand on rétrécit ou élargit
+        [Projet 6] En tablette/mobile, l'image dans la modale devrait être en bas et non à gauche
+        [Projet 6] Rendre générique la récupération des 6 premiers films plutôt que de récupérer 2 pages en dur
+        [Projet 6] Eviter le innerHTML avec de l'input de l'extérieur (sécurité)
+        [Projet 6] Renommer #categorie-3 ?
+        [Projet 6] Peut-être ajouter une classe pour les catégories
+    [Projet 6] Refaire passer le HTML et le CSS dans les validateurs W3C
+    [Projet 6] Soutenance blanche la semaine prochaine
+
+
+
+    Présentation des livrables (15 minutes) 
+        Vous démontrerez et expliquerez la réalisation du front-end du site web.
+        Vous expliquerez la récupération des données depuis l’API de test de OCMovies.
