@@ -72,7 +72,7 @@ async function loadBestMovie(url) {
         bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movieTitle}`;
         bestMovieElement.querySelector('.movie-details h2').textContent = movieTitle;
         bestMovieElement.querySelector('.movie-synopsis').textContent = movie.description;
-        bestMovieElement.querySelector('.details-button').addEventListener('click', () => toggleModal(true, movie));
+        bestMovieElement.querySelector('.best-details-button').addEventListener('click', () => toggleModal(true, movie));
     } catch (error) {
         console.error('Erreur lors du chargement du meilleur film :', error);
     }

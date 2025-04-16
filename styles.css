@@ -79,7 +79,7 @@ h1 {
 }
 
 /* Boutons */
-.details-button, .close-button, .see-more-button, .see-less-button {
+.best-details-button, .details-button, .close-button, .see-more-button, .see-less-button {
     /* Styles communs pour les boutons */
     background-color: var(--primary-color);
     color: var(--text-color);
@@ -114,6 +114,18 @@ h1 {
     position: absolute;
     right: 10px;
     bottom: 10px;
+}
+
+.best-details-button {
+    align-self: flex-end;
+    padding: 10px 25px;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.best-details-button:hover {
+    background-color: var(--primary-color-hover);
 }
 
 /* Section des films les mieux notés */
