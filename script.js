@@ -103,6 +103,8 @@ function setupVisibilityButtons(containerSelector, movies, visibleCount) {
 function updateMovieVisibility(containerSelector) {
     const container = document.querySelector(containerSelector);
     const movies = container.querySelectorAll('.movie-item');
+    const seeMoreButton = container.querySelector('.see-more-button');
+    const seeLessButton = container.querySelector('.see-less-button');
 
     const isTablet = window.matchMedia('(max-width: 768px)').matches;
     const isMobile = window.matchMedia('(max-width: 480px)').matches;
@@ -117,6 +119,15 @@ function updateMovieVisibility(containerSelector) {
     movies.forEach((movie, index) => {
         movie.style.display = index < visibleCount ? 'block' : 'none';
     });
+
+    // Met à jour l'état des boutons
+    if (movies.length > visibleCount) {
+        seeMoreButton.style.display = 'block';
+        seeLessButton.style.display = 'none';
+    } else {
+        seeMoreButton.style.display = 'none';
+        seeLessButton.style.display = 'none';
+    }
 
     setupVisibilityButtons(containerSelector, movies, visibleCount);
 }
