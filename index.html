@@ -2,7 +2,6 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-     <!-- viewport utile ou pas ? à tester -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JustStreamIt - Vidéos à la demande</title>
     <meta name="description" content="JustStreamIt - Votre plateforme de streaming de films et séries. Découvrez les meilleurs films et séries à la demande.">
@@ -16,13 +15,13 @@
 <body>
     <header>
         <div class="logo">
-            <!-- Logo du site JustStreamIt -->
+            <!-- JustStreamIt logo -->
             <img src="https://user.oc-static.com/upload/2020/09/18/16004298163529_P5.png" alt="Logo de l'association JustStreamIt. Il y a une image stylisé d'un objectif de caméra&quot; en noir et blanc, et au-dessous le texte &quot;JustStreamIt&quot;">
             <h1>Vidéos à la demande</h1>
         </div>
     </header>
     <main>
-        <!-- Section du meilleur film -->
+        <!-- Best Film Section -->
         <section id="best-movie">
             <h2>Meilleur film</h2>
             <div class="movie-frame">
@@ -34,58 +33,58 @@
                 </div>
             </div>
         </section>
-        <!-- Section des films les mieux notés -->
+        <!-- Top rated films section -->
         <section id="top-rated-movies">
             <h2>Films les mieux notés</h2>
             <div class="movie-grid">
-                <!-- Les films seront insérés ici dynamiquement -->
+                <!-- The films will be inserted here dynamically -->
             </div>
-            <br> <!-- Ajout d'un espace avant le bouton -->
+            <br> <!-- Add a space before the button -->
             <button class="see-more-button">Voir plus</button>
             <button class="see-less-button">Voir moins</button>
         </section>
-        <!-- Section des catégories -->
+        <!-- Categories section -->
         <section id="categorie-1">
             <h2>categorie-1</h2>
             <div class="movie-grid">
-                <!-- Les films seront insérés ici dynamiquement -->
+                <!-- The films will be inserted here dynamically -->
             </div>
-            <br> <!-- Ajout d'un espace avant le bouton -->
+            <br> <!-- Add a space before the button -->
             <button class="see-more-button">Voir plus</button>
             <button class="see-less-button">Voir moins</button>
         </section>
         <section id="categorie-2">
             <h2>categorie-2</h2>
             <div class="movie-grid">
-                <!-- Les films seront insérés ici dynamiquement -->
+                <!-- The films will be inserted here dynamically -->
             </div>
-            <br> <!-- Ajout d'un espace avant le bouton -->
+            <br> <!-- Add a space before the button -->
             <button class="see-more-button">Voir plus</button>
             <button class="see-less-button">Voir moins</button>
         </section>
-        <!-- Autre catégorie à choisir dans une liste déroulante-->
+        <!-- Other category to choose from a drop-down list -->
         <section id="other-category">
             <h2>Autres catégories</h2>
             <br>
             <label for="other-categories">Choisissez une catégorie: </label>
             <select id="other-categories" name="categories">
-                <!-- Les catégories seront insérées ici dynamiquement -->
+                <!-- Categories will be inserted here dynamically -->
             </select>
             <div class="movie-grid">
-                <!-- Les films seront insérés ici dynamiquement -->
+                <!-- The films will be inserted here dynamically -->
             </div>
-            <br> <!-- Ajout d'un espace avant le bouton -->
+            <br> <!-- Add a space before the button -->
             <button class="see-more-button">Voir plus</button>
             <button class="see-less-button">Voir moins</button>
         </section>
     </main>
-     <!-- Fenêtre modale pour les détails du film -->
+     <!-- Modal window for film details -->
     <div id="movie-modal" class="modal">
         <div class="modal-content">
-            <!-- Bouton pour fermer la modale -->
+            <!-- Button to close the modal -->
             <button class="modal-x-close">&times;</button>
             <div class="modal-sections">
-                <!-- Section Titre du film -->
+                <!-- Section Film title -->
                 <div class="modal-title">
                     <h2>Titre du film</h2>
                     <p id="year-genre"></p>
@@ -97,18 +96,18 @@
                 <div class="modal-poster">
                     <img src="" alt="Affiche du film" class="movie-poster">
                 </div>
-                <!-- Section Réalisé par et Synopsis -->
+                <!-- Section Directed by and Synopsis -->
                 <div class="modal-synopsis">
                     <p>Réalisé par :</p>
                     <p id="directors"></p>
                     <p class="movie-synopsis"></p>
                 </div>
-                <!-- Section Liste des acteurs -->
+                <!-- Section List of players -->
                 <div class="modal-actors">
                     <p>Avec :</p>
                     <p class="actors-list"></p>
                 </div>
-                <!-- Section Bouton -->
+                <!-- Button section -->
                 <button class="close-button">Fermer</button>
             </div>
         </div>
