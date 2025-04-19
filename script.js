@@ -70,7 +70,7 @@ async function loadBestMovie(url) {
         const bestMovieElement = document.querySelector('#best-movie');
         bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
         bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movieTitle}`;
-        bestMovieElement.querySelector('.movie-details h2').textContent = movieTitle;
+        bestMovieElement.querySelector('.movie-details h3').textContent = movieTitle;
         bestMovieElement.querySelector('.movie-synopsis').textContent = movie.description;
         bestMovieElement.querySelector('.best-details-button').addEventListener('click', () => toggleModal(true, movie));
     } catch (error) {

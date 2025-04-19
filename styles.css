@@ -11,7 +11,7 @@
     --button-bg-dark-hover: #333333; /* Fond des boutons sombres au survol (gris foncé) */
 }
 
-h1, h2, label, select {
+h1, h2, h3, label, select {
     font-family: 'Oswald', sans-serif;
     font-weight: 500;
     font-size: 34px;
@@ -64,7 +64,7 @@ h1 {
     text-align: left;
 }
 
-.movie-details h2 {
+.movie-details h3 {
     margin: 0 0 10px 0;
 }
 
