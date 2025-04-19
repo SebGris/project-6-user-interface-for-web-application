@@ -196,8 +196,13 @@ h1 {
     grid-column: 1 / -1;
 }
 
-.modal-synopsis p {
+.modal-synopsis p, .modal-actors p {
     margin: 5px 0; /* Réduit l'espacement vertical entre les paragraphes */
+}
+
+.modal-synopsis p:first-child,
+.modal-actors p:first-child {
+    font-weight: bold;
 }
 
 /* Section Liste des acteurs */
