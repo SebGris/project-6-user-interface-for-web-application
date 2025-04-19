@@ -117,11 +117,10 @@ h1 {
 }
 
 .best-details-button {
-    align-self: flex-end;
+    align-self: flex-end; /* Aligne le bouton à droite */
+    margin-top: 10px; /* Ajoute un espace au-dessus du bouton */
     padding: 10px 25px;
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
+    position: static; /* Supprime la position absolue */
 }
 
 .best-details-button:hover {
