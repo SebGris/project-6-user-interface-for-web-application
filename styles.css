@@ -374,6 +374,10 @@ h1 {
     h2 {
         text-align: center;
     }
+    
+    .modal-title h2 {
+        text-align: left;
+    }
 }
 
 @media (min-width: 769px) {
