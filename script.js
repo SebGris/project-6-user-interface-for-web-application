@@ -5,7 +5,7 @@ const API_URLS = {
 
 // Fonction générique pour effectuer une requête API
 async function fetchData(url) {
-    const response = await fetch(url);
+    let response = await fetch(url);
     if (!response.ok) {
         throw new Error(`Erreur HTTP : ${response.status}`);
     }
@@ -14,13 +14,13 @@ async function fetchData(url) {
 
 // Fonction pour afficher ou cacher la modale
 function toggleModal(display, movie = null) {
-    const modal = document.getElementById('movie-modal');
+    let modal = document.getElementById('movie-modal');
     if (display && movie) {
-        const movieTitle = movie.original_title || movie.title;
-        const worldwide_gross_income = movie.worldwide_gross_income 
+        let movieTitle = movie.original_title || movie.title;
+        let worldwide_gross_income = movie.worldwide_gross_income 
             ? `$${(movie.worldwide_gross_income / 1_000_000).toFixed(1)}m` 
             : 'non renseigné';
-        const modalElements = {
+        let modalElements = {
             '.modal-title h2': movieTitle,
             '#year-genre': `${movie.year} - ${movie.genres.join(', ')}`,
             '#rating-duration': `PG-${movie.rated} - ${movie.duration} minutes (${movie.countries.join(' / ')})`,
@@ -31,11 +31,11 @@ function toggleModal(display, movie = null) {
             '.modal-actors .actors-list': movie.actors.join(', ')
         };
 
-        for (const [selector, textContent] of Object.entries(modalElements)) {
+        for (let [selector, textContent] of Object.entries(modalElements)) {
             modal.querySelector(selector).textContent = textContent;
         }
 
-        const poster = modal.querySelector('.modal-poster img');
+        let poster = modal.querySelector('.modal-poster img');
         poster.src = movie.image_url;
         poster.alt = `Affiche du film ${movieTitle}`;
     }
@@ -44,9 +44,9 @@ function toggleModal(display, movie = null) {
 
 // Fonction pour configurer les événements de la modale
 function setupModalEvents() {
-    const modal = document.getElementById('movie-modal');
-    const closeModalButton = document.querySelector('.modal-x-close');
-    const closeButton = document.querySelector('.close-button');
+    let modal = document.getElementById('movie-modal');
+    let closeModalButton = document.querySelector('.modal-x-close');
+    let closeButton = document.querySelector('.close-button');
 
     closeModalButton.addEventListener('click', () => toggleModal(false));
     closeButton.addEventListener('click', () => toggleModal(false));
@@ -61,13 +61,13 @@ function setupModalEvents() {
 // Fonction pour charger le meilleur film
 async function loadBestMovie(url) {
     try {
-        const { results } = await fetchData(url);
+        let { results } = await fetchData(url);
         if (!results || results.length === 0) {
             throw new Error("Aucun film trouvé.");
         }
-        const movie = await fetchData(`${API_URLS.BASE_URL}${results[0].id}`);
-        const movieTitle = movie.original_title || movie.title;
-        const bestMovieElement = document.querySelector('#best-movie');
+        let movie = await fetchData(`${API_URLS.BASE_URL}${results[0].id}`);
+        let movieTitle = movie.original_title || movie.title;
+        let bestMovieElement = document.querySelector('#best-movie');
         bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
         bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movieTitle}`;
         bestMovieElement.querySelector('.movie-details h3').textContent = movieTitle;
@@ -80,9 +80,9 @@ async function loadBestMovie(url) {
 
 // Fonction pour configurer les événements des boutons "Voir plus" et "Voir moins"
 function setupVisibilityButtons(containerSelector, movies, visibleCount) {
-    const container = document.querySelector(containerSelector);
-    const seeMoreButton = container.querySelector('.see-more-button');
-    const seeLessButton = container.querySelector('.see-less-button');
+    let container = document.querySelector(containerSelector);
+    let seeMoreButton = container.querySelector('.see-more-button');
+    let seeLessButton = container.querySelector('.see-less-button');
 
     seeMoreButton.addEventListener('click', () => {
         movies.forEach(movie => (movie.style.display = 'block'));
@@ -101,13 +101,13 @@ function setupVisibilityButtons(containerSelector, movies, visibleCount) {
 
 // Fonction pour gérer l'affichage des films en fonction de la taille de l'écran
 function updateMovieVisibility(containerSelector) {
-    const container = document.querySelector(containerSelector);
-    const movies = container.querySelectorAll('.movie-item');
-    const seeMoreButton = container.querySelector('.see-more-button');
-    const seeLessButton = container.querySelector('.see-less-button');
+    let container = document.querySelector(containerSelector);
+    let movies = container.querySelectorAll('.movie-item');
+    let seeMoreButton = container.querySelector('.see-more-button');
+    let seeLessButton = container.querySelector('.see-less-button');
 
-    const isTablet = window.matchMedia('(max-width: 768px)').matches;
-    const isMobile = window.matchMedia('(max-width: 480px)').matches;
+    let isTablet = window.matchMedia('(max-width: 768px)').matches;
+    let isMobile = window.matchMedia('(max-width: 480px)').matches;
 
     let visibleCount = movies.length;
     if (isMobile) {
@@ -134,38 +134,38 @@ function updateMovieVisibility(containerSelector) {
 
 // Fonction pour charger les 6 films les mieux notés
 async function loadTopRatedMovies(genre, containerSelector) {
-    const container = document.querySelector(containerSelector);
+    let container = document.querySelector(containerSelector);
     if (genre) container.querySelector('h2').textContent = genre;
     
-    const movieGrid = container.querySelector('.movie-grid');
+    let movieGrid = container.querySelector('.movie-grid');
     movieGrid.textContent = ''; // Efface le contenu existant
     
     // La première URL récupère les 5 premiers films, la deuxième URL (avec page=2) récupère les 5 films suivants
-    const baseUrls = [`${API_URLS.BASE_URL}?sort_by=-imdb_score`, `${API_URLS.BASE_URL}?page=2&sort_by=-imdb_score`];
-    const urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
+    let baseUrls = [`${API_URLS.BASE_URL}?sort_by=-imdb_score`, `${API_URLS.BASE_URL}?page=2&sort_by=-imdb_score`];
+    let urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
     try {
-        const results = (await Promise.all(urls.map(fetchData)))
+        let results = (await Promise.all(urls.map(fetchData)))
             .flatMap(data => data.results)
             .slice(0, 6);
 
         results.forEach(movie => {
-            const movieItem = document.createElement('div');
+            let movieItem = document.createElement('div');
             movieItem.className = 'movie-item';
 
-            const img = document.createElement('img');
+            let img = document.createElement('img');
             img.src = movie.image_url;
             img.alt = `Affiche du film ${movie.original_title || movie.title}`;
             img.className = 'movie-image';
             img.setAttribute('data-movie-id', movie.id);
 
-            const overlay = document.createElement('div');
+            let overlay = document.createElement('div');
             overlay.className = 'overlay';
 
-            const title = document.createElement('h1');
+            let title = document.createElement('h1');
             title.className = 'movie-title';
             title.textContent = movie.original_title || movie.title;
 
-            const button = document.createElement('button');
+            let button = document.createElement('button');
             button.className = 'details-button';
             button.setAttribute('data-movie-id', movie.id);
             button.textContent = 'Détails';
@@ -191,8 +191,8 @@ async function loadTopRatedMovies(genre, containerSelector) {
 function addMovieDetailsEvent(selector, callback) {
     document.querySelectorAll(selector).forEach(element => {
         element.addEventListener('click', async (event) => {
-            const movieId = event.target.getAttribute('data-movie-id');
-            const movie = await fetchData(`${API_URLS.BASE_URL}${movieId}`);
+            let movieId = event.target.getAttribute('data-movie-id');
+            let movie = await fetchData(`${API_URLS.BASE_URL}${movieId}`);
             callback(movie);
         });
     });
@@ -203,7 +203,7 @@ async function loadCategories(url) {
     let categories = [];
     while (url) {
         try {
-            const data = await fetchData(url);
+            let data = await fetchData(url);
             categories = [...categories, ...data.results];
             url = data.next;
         } catch (error) {
@@ -212,10 +212,10 @@ async function loadCategories(url) {
         }
     }
 
-    const categorySelect = document.getElementById('other-categories');
+    let categorySelect = document.getElementById('other-categories');
     categorySelect.textContent = ''; // Efface les options existantes
     categories.forEach(category => {
-        const option = document.createElement('option');
+        let option = document.createElement('option');
         option.value = category.name;
         option.textContent = category.name;
         categorySelect.appendChild(option);
@@ -224,7 +224,7 @@ async function loadCategories(url) {
 
 // Fonction pour initialiser les événements de redimensionnement
 function setupResizeEvents() {
-    const containers = ['#top-rated-movies', '#categorie-1', '#categorie-2', '#other-category'];
+    let containers = ['#top-rated-movies', '#categorie-1', '#categorie-2', '#other-category'];
     window.addEventListener('resize', () => {
         containers.forEach(updateMovieVisibility);
     });
@@ -239,7 +239,7 @@ async function initialize() {
 }
 
 async function loadInitialData() {
-    const bestMovieUrl = `${API_URLS.BASE_URL}?page=1&sort_by=-imdb_score`;
+    let bestMovieUrl = `${API_URLS.BASE_URL}?page=1&sort_by=-imdb_score`;
     await loadBestMovie(bestMovieUrl);
     await loadTopRatedMovies('', '#top-rated-movies');
     await loadTopRatedMovies('Crime', '#categorie-1');
@@ -248,12 +248,12 @@ async function loadInitialData() {
 }
 
 function setupCategoryChangeEvent() {
-    const categorySelect = document.getElementById('other-categories');
+    let categorySelect = document.getElementById('other-categories');
     if (categorySelect.value) {
         loadTopRatedMovies(categorySelect.value, '#other-category');
     }
     categorySelect.addEventListener('change', (event) => {
-        const selectedCategory = event.target.value;
+        let selectedCategory = event.target.value;
         if (selectedCategory) {
             loadTopRatedMovies(selectedCategory, '#other-category');
         }
