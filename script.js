@@ -1,6 +1,6 @@
 const API_URLS = {
-    TITLES_URL: 'http://localhost:8000/api/v1/titles/',
-    GENRES_URL: 'http://localhost:8000/api/v1/genres/',
+    TITLE_URL: 'http://localhost:8000/api/v1/titles/',
+    GENRE_URL: 'http://localhost:8000/api/v1/genres/',
 };
 
 // Prend une URL en paramètre et retourne les données JSON de la réponse
@@ -43,45 +43,29 @@ function updateModalContent(movie) {
 function toggleModal(display, movie = null) {
     let modal = document.getElementById('movie-modal');
     if (display && movie) {
-        updateModalContent(movie); // Appel à la nouvelle fonction
+        updateModalContent(movie);
     }
     modal.style.display = display ? 'flex' : 'none';
 }
 
-// Ajoute des écouteurs pour fermer la modale via les boutons ou un clic extérieur
-function setupModalEvents() {
-    let modal = document.getElementById('movie-modal');
-    let closeModalButton = document.querySelector('.modal-x-close');
-    let closeButton = document.querySelector('.close-button');
-
-    closeModalButton.addEventListener('click', () => toggleModal(false));
-    closeButton.addEventListener('click', () => toggleModal(false));
-
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            toggleModal(false);
-        }
-    });
+// Récupère les données du meilleur film
+async function fetchBestMovieData(sortedMovieUrl) {
+    let { results: sortedMovieList } = await fetchData(sortedMovieUrl);
+    if (!sortedMovieList || sortedMovieList.length === 0) {
+        throw new Error("Aucun film trouvé.");
+    }
+    return fetchData(`${API_URLS.TITLE_URL}${sortedMovieList[0].id}`);
 }
 
-// Récupère et affiche les informations du film le mieux noté
-async function loadBestMovie(url) {
-    try {
-        let { results } = await fetchData(url);
-        if (!results || results.length === 0) {
-            throw new Error("Aucun film trouvé.");
-        }
-        let movie = await fetchData(`${API_URLS.TITLES_URL}${results[0].id}`);
-        let movieTitle = movie.original_title || movie.title;
-        let bestMovieElement = document.querySelector('#best-movie');
-        bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
-        bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movieTitle}`;
-        bestMovieElement.querySelector('.movie-details h3').textContent = movieTitle;
-        bestMovieElement.querySelector('.movie-synopsis').textContent = movie.description;
-        bestMovieElement.querySelector('.best-details-button').addEventListener('click', () => toggleModal(true, movie));
-    } catch (error) {
-        console.error('Erreur lors du chargement du meilleur film :', error);
-    }
+// Met à jour l'interface utilisateur avec les données du meilleur film
+function updateBestMovieUI(movie) {
+    let movieTitle = movie.original_title || movie.title;
+    let bestMovieElement = document.querySelector('#best-movie');
+    bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
+    bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movieTitle}`;
+    bestMovieElement.querySelector('.movie-details h3').textContent = movieTitle;
+    bestMovieElement.querySelector('.movie-synopsis').textContent = movie.description;
+    bestMovieElement.querySelector('.best-details-button').addEventListener('click', () => toggleModal(true, movie));
 }
 
 // Contrôle la visibilité des films en fonction du nombre visible ou de l'état "voir tout"
@@ -140,18 +124,10 @@ function updateMovieVisibility(containerSelector) {
 
 // Retourne une liste des films triés par score IMDB, avec ou sans filtre de genre
 async function fetchTopRatedMovies(genre) {
-    let baseUrls = [`${API_URLS.TITLES_URL}?sort_by=-imdb_score`, `${API_URLS.TITLES_URL}?page=2&sort_by=-imdb_score`];
-    let urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
-
-    try {
-        let results = (await Promise.all(urls.map(fetchData)))
-            .flatMap(data => data.results)
-            .slice(0, 6);
-        return results;
-    } catch (error) {
-        console.error('Erreur lors de la récupération des films les mieux notés :', error);
-        return [];
-    }
+    const DEFAULT_MOVIE_COUNT = 6;
+    let sortedUrl = `${API_URLS.TITLE_URL}?sort_by=-imdb_score`;
+    let finalUrl = genre ? `${sortedUrl}&genre=${genre}` : sortedUrl;
+    return fetchMovies(finalUrl, DEFAULT_MOVIE_COUNT);
 }
 
 // Génère dynamiquement les éléments HTML pour afficher les films dans un conteneur
@@ -212,7 +188,7 @@ function addMovieDetailsEvent(selector, callback) {
     document.querySelectorAll(selector).forEach(element => {
         element.addEventListener('click', async (event) => {
             let movieId = event.target.getAttribute('data-movie-id');
-            let movie = await fetchData(`${API_URLS.TITLES_URL}${movieId}`);
+            let movie = await fetchData(`${API_URLS.TITLE_URL}${movieId}`);
             callback(movie);
         });
     });
@@ -234,6 +210,25 @@ async function fetchCategories(url) {
     return categories;
 }
 
+async function fetchMovies(url, numberOfMovies) {
+    let movies = [];
+    while (url) {
+        try {
+            let data = await fetchData(url);
+            movies = [...movies, ...data.results];
+            if (movies.length >= numberOfMovies) {
+                movies = movies.slice(0, numberOfMovies);
+                break;
+            }
+            url = data.next;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des films :', error);
+            return [];
+        }
+    }
+    return movies;
+}
+
 // Remplit la liste déroulante avec les catégories récupérées
 function updateCategorySelect(categories) {
     let categorySelect = document.getElementById('other-categories');
@@ -253,17 +248,50 @@ async function loadCategories(url) {
 }
 
 // Met à jour la visibilité des films lorsque la taille de l'écran change
-function setupResizeEvents() {
+function setupResizeListeners() {
     let containers = ['#top-rated-movies', '#categorie-1', '#categorie-2', '#other-category'];
     window.addEventListener('resize', () => {
         containers.forEach(updateMovieVisibility);
     });
 }
 
+// Ajoute des écouteurs pour fermer la modale via les boutons ou un clic extérieur
+function setupModalHandlers() {
+    let closeModalButton = document.querySelector('.modal-x-close');
+    closeModalButton.addEventListener('click', () => toggleModal(false));
+    let closeButton = document.querySelector('.close-button');
+    closeButton.addEventListener('click', () => toggleModal(false));
+    let modal = document.getElementById('movie-modal');
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            toggleModal(false);
+        }
+    });
+}
+
+// Charge les films de la catégorie sélectionnée dans la liste déroulante
+function setupCategoryChangeListener() {
+    let categorySelect = document.getElementById('other-categories');
+    if (categorySelect.value) {
+        loadTopRatedMovies(categorySelect.value, '#other-category');
+    }
+    categorySelect.addEventListener('change', (event) => {
+        let selectedCategory = event.target.value;
+        if (selectedCategory) {
+            loadTopRatedMovies(selectedCategory, '#other-category');
+        }
+    });
+}
+
 // Fonction pour charger le meilleur film
 async function loadBestMovieData() {
-    let bestMovieUrl = `${API_URLS.TITLES_URL}?page=1&sort_by=-imdb_score`;
-    await loadBestMovie(bestMovieUrl);
+    let sortedMovieListUrl = `${API_URLS.TITLE_URL}?page=1&sort_by=-imdb_score`;
+    try {
+        let movie = await fetchBestMovieData(sortedMovieListUrl);
+        updateBestMovieUI(movie);
+    } catch (error) {
+        console.error('Erreur lors du chargement du meilleur film :', error);
+    }
 }
 
 // Charge les films pour la section principale et les catégories
@@ -275,7 +303,7 @@ async function loadTopRatedMoviesData() {
 
 // Récupère et affiche les catégories dans la liste déroulante
 async function loadCategoriesData() {
-    await loadCategories(API_URLS.GENRES_URL);
+    await loadCategories(API_URLS.GENRE_URL);
 }
 
 // Charge le meilleur film, les films les mieux notés et les catégories
@@ -288,23 +316,9 @@ async function loadInitialData() {
 // Configure les événements et charge les données initiales
 async function initialize() {
     await loadInitialData();
-    setupCategoryChangeEvent();
-    setupModalEvents();
-    setupResizeEvents();
-}
-
-// Charge les films de la catégorie sélectionnée dans la liste déroulante
-function setupCategoryChangeEvent() {
-    let categorySelect = document.getElementById('other-categories');
-    if (categorySelect.value) {
-        loadTopRatedMovies(categorySelect.value, '#other-category');
-    }
-    categorySelect.addEventListener('change', (event) => {
-        let selectedCategory = event.target.value;
-        if (selectedCategory) {
-            loadTopRatedMovies(selectedCategory, '#other-category');
-        }
-    });
+    setupCategoryChangeListener();
+    setupModalHandlers();
+    setupResizeListeners();
 }
 
 // Lance la fonction d'initialisation lorsque le DOM est prêt
