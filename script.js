@@ -1,5 +1,5 @@
 const API_URLS = {
-    BASE_URL: 'http://localhost:8000/api/v1/titles/',
+    TITLES_URL: 'http://localhost:8000/api/v1/titles/',
     GENRES_URL: 'http://localhost:8000/api/v1/genres/',
 };
 
@@ -12,32 +12,38 @@ async function fetchData(url) {
     return response.json();
 }
 
+// Fonction pour mettre à jour le contenu de la modale
+function updateModalContent(movie) {
+    let modal = document.getElementById('movie-modal');
+    let movieTitle = movie.original_title || movie.title;
+    let worldwide_gross_income = movie.worldwide_gross_income 
+        ? `$${(movie.worldwide_gross_income / 1_000_000).toFixed(1)}m` 
+        : 'non renseigné';
+    let modalElements = {
+        '.modal-title h2': movieTitle,
+        '#year-genre': `${movie.year} - ${movie.genres.join(', ')}`,
+        '#rating-duration': `PG-${movie.rated} - ${movie.duration} minutes (${movie.countries.join(' / ')})`,
+        '#score': `Score IMDB: ${movie.imdb_score}/10`,
+        '#box-office': `Recettes au box-office: ${worldwide_gross_income}`,
+        '#directors': movie.directors.join(', '),
+        '.modal-synopsis .movie-synopsis': movie.description,
+        '.modal-actors .actors-list': movie.actors.join(', ')
+    };
+
+    for (let [selector, textContent] of Object.entries(modalElements)) {
+        modal.querySelector(selector).textContent = textContent;
+    }
+
+    let poster = modal.querySelector('.modal-poster img');
+    poster.src = movie.image_url;
+    poster.alt = `Affiche du film ${movieTitle}`;
+}
+
 // Fonction pour afficher ou cacher la modale
 function toggleModal(display, movie = null) {
     let modal = document.getElementById('movie-modal');
     if (display && movie) {
-        let movieTitle = movie.original_title || movie.title;
-        let worldwide_gross_income = movie.worldwide_gross_income 
-            ? `$${(movie.worldwide_gross_income / 1_000_000).toFixed(1)}m` 
-            : 'non renseigné';
-        let modalElements = {
-            '.modal-title h2': movieTitle,
-            '#year-genre': `${movie.year} - ${movie.genres.join(', ')}`,
-            '#rating-duration': `PG-${movie.rated} - ${movie.duration} minutes (${movie.countries.join(' / ')})`,
-            '#score': `Score IMDB: ${movie.imdb_score}/10`,
-            '#box-office': `Recettes au box-office: ${worldwide_gross_income}`,
-            '#directors': movie.directors.join(', '),
-            '.modal-synopsis .movie-synopsis': movie.description,
-            '.modal-actors .actors-list': movie.actors.join(', ')
-        };
-
-        for (let [selector, textContent] of Object.entries(modalElements)) {
-            modal.querySelector(selector).textContent = textContent;
-        }
-
-        let poster = modal.querySelector('.modal-poster img');
-        poster.src = movie.image_url;
-        poster.alt = `Affiche du film ${movieTitle}`;
+        updateModalContent(movie); // Appel à la nouvelle fonction
     }
     modal.style.display = display ? 'flex' : 'none';
 }
@@ -65,7 +71,7 @@ async function loadBestMovie(url) {
         if (!results || results.length === 0) {
             throw new Error("Aucun film trouvé.");
         }
-        let movie = await fetchData(`${API_URLS.BASE_URL}${results[0].id}`);
+        let movie = await fetchData(`${API_URLS.TITLES_URL}${results[0].id}`);
         let movieTitle = movie.original_title || movie.title;
         let bestMovieElement = document.querySelector('#best-movie');
         bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
@@ -111,9 +117,9 @@ function updateMovieVisibility(containerSelector) {
 
     let visibleCount = movies.length;
     if (isMobile) {
-        visibleCount = 2; // Affiche les 2 premiers films
+        visibleCount = 2;
     } else if (isTablet) {
-        visibleCount = 4; // Affiche les 4 premiers films
+        visibleCount = 4;
     }
 
     movies.forEach((movie, index) => {
@@ -143,7 +149,7 @@ async function loadTopRatedMovies(genre, containerSelector) {
     movieGrid.textContent = '';
     
     // Prépare les URLs pour récupérer les films (page 1 et page 2)
-    let baseUrls = [`${API_URLS.BASE_URL}?sort_by=-imdb_score`, `${API_URLS.BASE_URL}?page=2&sort_by=-imdb_score`];
+    let baseUrls = [`${API_URLS.TITLES_URL}?sort_by=-imdb_score`, `${API_URLS.TITLES_URL}?page=2&sort_by=-imdb_score`];
     let urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
 
     try {
@@ -201,7 +207,7 @@ function addMovieDetailsEvent(selector, callback) {
     document.querySelectorAll(selector).forEach(element => {
         element.addEventListener('click', async (event) => {
             let movieId = event.target.getAttribute('data-movie-id');
-            let movie = await fetchData(`${API_URLS.BASE_URL}${movieId}`);
+            let movie = await fetchData(`${API_URLS.TITLES_URL}${movieId}`);
             callback(movie);
         });
     });
@@ -226,7 +232,7 @@ async function fetchCategories(url) {
 // Fonction pour mettre à jour l'élément DOM avec les catégories
 function updateCategorySelect(categories) {
     let categorySelect = document.getElementById('other-categories');
-    categorySelect.textContent = ''; // Efface les options existantes
+    categorySelect.textContent = '';
     categories.forEach(category => {
         let option = document.createElement('option');
         option.value = category.name;
@@ -258,7 +264,7 @@ async function initialize() {
 }
 
 async function loadInitialData() {
-    let bestMovieUrl = `${API_URLS.BASE_URL}?page=1&sort_by=-imdb_score`;
+    let bestMovieUrl = `${API_URLS.TITLES_URL}?page=1&sort_by=-imdb_score`;
     await loadBestMovie(bestMovieUrl);
     await loadTopRatedMovies('', '#top-rated-movies');
     await loadTopRatedMovies('Crime', '#categorie-1');
