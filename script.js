@@ -199,9 +199,9 @@ async function fetchCategories(url) {
     let categories = [];
     while (url) {
         try {
-            let data = await fetchData(url);
-            categories = [...categories, ...data.results];
-            url = data.next;
+            let { results, next } = await fetchData(url);
+            categories = [...categories, ...results];
+            url = next;
         } catch (error) {
             console.error('Erreur lors de la récupération des catégories :', error);
             return [];
@@ -210,23 +210,21 @@ async function fetchCategories(url) {
     return categories;
 }
 
+// Retourne une liste des films d'une URL donnée, avec un nombre maximum de films
 async function fetchMovies(url, numberOfMovies) {
-    let movies = [];
-    while (url) {
-        try {
-            let data = await fetchData(url);
-            movies = [...movies, ...data.results];
-            if (movies.length >= numberOfMovies) {
-                movies = movies.slice(0, numberOfMovies);
-                break;
-            }
-            url = data.next;
-        } catch (error) {
-            console.error('Erreur lors de la récupération des films :', error);
-            return [];
+    try {
+        let movies = [];
+        while (url && movies.length < numberOfMovies) {
+            // Extrait les propriétés `results` et `next`
+            let { results, next } = await fetchData(url);
+            movies = [...movies, ...results];
+            url = next;
         }
+        return movies.slice(0, numberOfMovies);
+    } catch (error) {
+        console.error('Erreur lors de la récupération des films :', error);
+        return [];
     }
-    return movies;
 }
 
 // Remplit la liste déroulante avec les catégories récupérées
