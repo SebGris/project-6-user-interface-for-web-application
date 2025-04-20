@@ -3,7 +3,7 @@ const API_URLS = {
     GENRES_URL: 'http://localhost:8000/api/v1/genres/',
 };
 
-// Fonction générique pour effectuer une requête API
+// Prend une URL en paramètre et retourne les données JSON de la réponse
 async function fetchData(url) {
     let response = await fetch(url);
     if (!response.ok) {
@@ -12,7 +12,7 @@ async function fetchData(url) {
     return response.json();
 }
 
-// Fonction pour mettre à jour le contenu de la modale
+// Remplit les éléments de la modale avec les informations d'un film
 function updateModalContent(movie) {
     let modal = document.getElementById('movie-modal');
     let movieTitle = movie.original_title || movie.title;
@@ -39,7 +39,7 @@ function updateModalContent(movie) {
     poster.alt = `Affiche du film ${movieTitle}`;
 }
 
-// Fonction pour afficher ou cacher la modale
+// Affiche la modale si "display" est true, sinon la masque
 function toggleModal(display, movie = null) {
     let modal = document.getElementById('movie-modal');
     if (display && movie) {
@@ -48,7 +48,7 @@ function toggleModal(display, movie = null) {
     modal.style.display = display ? 'flex' : 'none';
 }
 
-// Fonction pour configurer les événements de la modale
+// Ajoute des écouteurs pour fermer la modale via les boutons ou un clic extérieur
 function setupModalEvents() {
     let modal = document.getElementById('movie-modal');
     let closeModalButton = document.querySelector('.modal-x-close');
@@ -64,7 +64,7 @@ function setupModalEvents() {
     });
 }
 
-// Fonction pour charger le meilleur film
+// Récupère et affiche les informations du film le mieux noté
 async function loadBestMovie(url) {
     try {
         let { results } = await fetchData(url);
@@ -84,14 +84,14 @@ async function loadBestMovie(url) {
     }
 }
 
-// Nouvelle fonction pour gérer l'affichage des films
+// Contrôle la visibilité des films en fonction du nombre visible ou de l'état "voir tout"
 function updateMovieDisplay(movies, visibleCount, showAll) {
     movies.forEach((movie, index) => {
         movie.style.display = showAll || index < visibleCount ? 'block' : 'none';
     });
 }
 
-// Nouvelle fonction pour configurer les événements des boutons "Voir plus" et "Voir moins"
+// Permet de basculer entre l'affichage complet ou partiel des films
 function setupVisibilityButtons(containerSelector, movies, visibleCount) {
     let container = document.querySelector(containerSelector);
     let seeMoreButton = container.querySelector('.see-more-button');
@@ -110,7 +110,7 @@ function setupVisibilityButtons(containerSelector, movies, visibleCount) {
     });
 }
 
-// Fonction pour gérer l'affichage des films en fonction de la taille de l'écran
+// Adapte le nombre de films visibles selon la taille de l'écran
 function updateMovieVisibility(containerSelector) {
     let container = document.querySelector(containerSelector);
     let movies = container.querySelectorAll('.movie-item');
@@ -143,7 +143,7 @@ function updateMovieVisibility(containerSelector) {
     setupVisibilityButtons(containerSelector, movies, visibleCount);
 }
 
-// Fonction pour récupérer les films les mieux notés
+// Retourne une liste des films triés par score IMDB, avec ou sans filtre de genre
 async function fetchTopRatedMovies(genre) {
     let baseUrls = [`${API_URLS.TITLES_URL}?sort_by=-imdb_score`, `${API_URLS.TITLES_URL}?page=2&sort_by=-imdb_score`];
     let urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
@@ -159,11 +159,11 @@ async function fetchTopRatedMovies(genre) {
     }
 }
 
-// Fonction pour créer les éléments DOM des films
+// Génère dynamiquement les éléments HTML pour afficher les films dans un conteneur
 function createMovieElements(movies, containerSelector) {
     let container = document.querySelector(containerSelector);
     let movieGrid = container.querySelector('.movie-grid');
-    movieGrid.textContent = ''; // Efface le contenu existant
+    movieGrid.textContent = '';
 
     movies.forEach(movie => {
         let movieItem = document.createElement('div');
@@ -195,12 +195,13 @@ function createMovieElements(movies, containerSelector) {
     });
 }
 
-// Fonction pour configurer les événements des films
+// Ajoute des écouteurs pour afficher les détails des films dans la modale
 function setupMovieEvents(containerSelector) {
     addMovieDetailsEvent(`${containerSelector} .movie-image`, (movie) => toggleModal(true, movie));
     addMovieDetailsEvent(`${containerSelector} .details-button`, (movie) => toggleModal(true, movie));
 }
 
+// Charge les films d'une catégorie spécifique et met à jour l'affichage
 async function loadTopRatedMovies(genre, containerSelector) {
     let container = document.querySelector(containerSelector);
     if (genre) container.querySelector('h2').textContent = genre;
@@ -211,6 +212,7 @@ async function loadTopRatedMovies(genre, containerSelector) {
     updateMovieVisibility(containerSelector);
 }
 
+// Configure les clics sur les images ou boutons pour ouvrir la modale
 function addMovieDetailsEvent(selector, callback) {
     document.querySelectorAll(selector).forEach(element => {
         element.addEventListener('click', async (event) => {
@@ -221,7 +223,7 @@ function addMovieDetailsEvent(selector, callback) {
     });
 }
 
-// Fonction pour récupérer les catégories depuis l'API
+// Retourne une liste de toutes les catégories disponibles
 async function fetchCategories(url) {
     let categories = [];
     while (url) {
@@ -237,7 +239,7 @@ async function fetchCategories(url) {
     return categories;
 }
 
-// Fonction pour mettre à jour l'élément DOM avec les catégories
+// Remplit la liste déroulante avec les catégories récupérées
 function updateCategorySelect(categories) {
     let categorySelect = document.getElementById('other-categories');
     categorySelect.textContent = '';
@@ -249,13 +251,13 @@ function updateCategorySelect(categories) {
     });
 }
 
-// Fonction pour charger les catégories (combine les deux responsabilités)
+// Combine la récupération des catégories et la mise à jour de la liste déroulante
 async function loadCategories(url) {
     let categories = await fetchCategories(url);
     updateCategorySelect(categories);
 }
 
-// Fonction pour initialiser les événements de redimensionnement
+// Met à jour la visibilité des films lorsque la taille de l'écran change
 function setupResizeEvents() {
     let containers = ['#top-rated-movies', '#categorie-1', '#categorie-2', '#other-category'];
     window.addEventListener('resize', () => {
@@ -269,25 +271,26 @@ async function loadBestMovieData() {
     await loadBestMovie(bestMovieUrl);
 }
 
-// Fonction pour charger les films les mieux notés
+// Charge les films pour la section principale et les catégories
 async function loadTopRatedMoviesData() {
     await loadTopRatedMovies('', '#top-rated-movies');
     await loadTopRatedMovies('Crime', '#categorie-1');
     await loadTopRatedMovies('Romance', '#categorie-2');
 }
 
-// Fonction pour charger les catégories
+// Récupère et affiche les catégories dans la liste déroulante
 async function loadCategoriesData() {
     await loadCategories(API_URLS.GENRES_URL);
 }
 
+// Charge le meilleur film, les films les mieux notés et les catégories
 async function loadInitialData() {
     await loadBestMovieData();
     await loadTopRatedMoviesData();
     await loadCategoriesData();
 }
 
-// Fonction principale d'initialisation
+// Configure les événements et charge les données initiales
 async function initialize() {
     await loadInitialData();
     setupCategoryChangeEvent();
@@ -295,6 +298,7 @@ async function initialize() {
     setupResizeEvents();
 }
 
+// Charge les films de la catégorie sélectionnée dans la liste déroulante
 function setupCategoryChangeEvent() {
     let categorySelect = document.getElementById('other-categories');
     if (categorySelect.value) {
@@ -308,5 +312,5 @@ function setupCategoryChangeEvent() {
     });
 }
 
-// Initialisation au chargement de la page
+// Lance la fonction d'initialisation lorsque le DOM est prêt
 document.addEventListener('DOMContentLoaded', initialize);
