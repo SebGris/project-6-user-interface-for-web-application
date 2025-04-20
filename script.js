@@ -84,22 +84,27 @@ async function loadBestMovie(url) {
     }
 }
 
-// Fonction pour configurer les événements des boutons "Voir plus" et "Voir moins"
+// Nouvelle fonction pour gérer l'affichage des films
+function updateMovieDisplay(movies, visibleCount, showAll) {
+    movies.forEach((movie, index) => {
+        movie.style.display = showAll || index < visibleCount ? 'block' : 'none';
+    });
+}
+
+// Nouvelle fonction pour configurer les événements des boutons "Voir plus" et "Voir moins"
 function setupVisibilityButtons(containerSelector, movies, visibleCount) {
     let container = document.querySelector(containerSelector);
     let seeMoreButton = container.querySelector('.see-more-button');
     let seeLessButton = container.querySelector('.see-less-button');
 
     seeMoreButton.addEventListener('click', () => {
-        movies.forEach(movie => (movie.style.display = 'block'));
+        updateMovieDisplay(movies, visibleCount, true); // Affiche tous les films
         seeMoreButton.style.display = 'none';
         seeLessButton.style.display = 'block';
     });
 
     seeLessButton.addEventListener('click', () => {
-        movies.forEach((movie, index) => {
-            movie.style.display = index < visibleCount ? 'block' : 'none';
-        });
+        updateMovieDisplay(movies, visibleCount, false); // Affiche uniquement les films visibles
         seeMoreButton.style.display = 'block';
         seeLessButton.style.display = 'none';
     });
