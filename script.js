@@ -207,8 +207,8 @@ function addMovieDetailsEvent(selector, callback) {
     });
 }
 
-// Fonction pour charger les catégories
-async function loadCategories(url) {
+// Fonction pour récupérer les catégories depuis l'API
+async function fetchCategories(url) {
     let categories = [];
     while (url) {
         try {
@@ -217,10 +217,14 @@ async function loadCategories(url) {
             url = data.next;
         } catch (error) {
             console.error('Erreur lors de la récupération des catégories :', error);
-            return;
+            return [];
         }
     }
+    return categories;
+}
 
+// Fonction pour mettre à jour l'élément DOM avec les catégories
+function updateCategorySelect(categories) {
     let categorySelect = document.getElementById('other-categories');
     categorySelect.textContent = ''; // Efface les options existantes
     categories.forEach(category => {
@@ -229,6 +233,12 @@ async function loadCategories(url) {
         option.textContent = category.name;
         categorySelect.appendChild(option);
     });
+}
+
+// Fonction pour charger les catégories (combine les deux responsabilités)
+async function loadCategories(url) {
+    let categories = await fetchCategories(url);
+    updateCategorySelect(categories);
 }
 
 // Fonction pour initialiser les événements de redimensionnement
