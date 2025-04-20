@@ -135,29 +135,36 @@ function updateMovieVisibility(containerSelector) {
 // Fonction pour charger les 6 films les mieux notés
 async function loadTopRatedMovies(genre, containerSelector) {
     let container = document.querySelector(containerSelector);
+    // Si un genre est spécifié, met à jour le titre de la section
     if (genre) container.querySelector('h2').textContent = genre;
     
     let movieGrid = container.querySelector('.movie-grid');
-    movieGrid.textContent = ''; // Efface le contenu existant
+    // Efface le contenu existant dans la grille des films
+    movieGrid.textContent = '';
     
-    // La première URL récupère les 5 premiers films, la deuxième URL (avec page=2) récupère les 5 films suivants
+    // Prépare les URLs pour récupérer les films (page 1 et page 2)
     let baseUrls = [`${API_URLS.BASE_URL}?sort_by=-imdb_score`, `${API_URLS.BASE_URL}?page=2&sort_by=-imdb_score`];
     let urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
+
     try {
+        // Récupère les données des deux pages et limite les résultats à 6 films
         let results = (await Promise.all(urls.map(fetchData)))
             .flatMap(data => data.results)
             .slice(0, 6);
 
+        // Parcourt les films récupérés pour les afficher
         results.forEach(movie => {
             let movieItem = document.createElement('div');
             movieItem.className = 'movie-item';
 
+            // Crée l'image du film
             let img = document.createElement('img');
             img.src = movie.image_url;
             img.alt = `Affiche du film ${movie.original_title || movie.title}`;
             img.className = 'movie-image';
             img.setAttribute('data-movie-id', movie.id);
 
+            // Crée une superposition pour afficher le titre et le bouton de détails
             let overlay = document.createElement('div');
             overlay.className = 'overlay';
 
@@ -170,6 +177,7 @@ async function loadTopRatedMovies(genre, containerSelector) {
             button.setAttribute('data-movie-id', movie.id);
             button.textContent = 'Détails';
 
+            // Ajoute les éléments à la superposition et à l'élément du film
             overlay.appendChild(title);
             overlay.appendChild(button);
             movieItem.appendChild(img);
@@ -177,10 +185,11 @@ async function loadTopRatedMovies(genre, containerSelector) {
             movieGrid.appendChild(movieItem);
         });
     } catch (error) {
+        // Gère les erreurs lors de la récupération des films
         console.error('Erreur lors du chargement des films les mieux notés :', error);
     }
 
-    // Ajout des événements pour les images des films
+    // Ajoute des événements pour afficher les détails des films
     addMovieDetailsEvent('.movie-image', (movie) => toggleModal(true, movie));
     addMovieDetailsEvent('.details-button', (movie) => toggleModal(true, movie));
 
