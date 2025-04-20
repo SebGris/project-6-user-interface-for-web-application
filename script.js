@@ -1,6 +1,6 @@
-const API = {
-    baseUrl: 'http://localhost:8000/api/v1/titles/',
-    genresUrl: 'http://localhost:8000/api/v1/genres/',
+const API_URLS = {
+    BASE_URL: 'http://localhost:8000/api/v1/titles/',
+    GENRES_URL: 'http://localhost:8000/api/v1/genres/',
 };
 
 // Fonction générique pour effectuer une requête API
@@ -65,7 +65,7 @@ async function loadBestMovie(url) {
         if (!results || results.length === 0) {
             throw new Error("Aucun film trouvé.");
         }
-        const movie = await fetchData(`${API.baseUrl}${results[0].id}`);
+        const movie = await fetchData(`${API_URLS.BASE_URL}${results[0].id}`);
         const movieTitle = movie.original_title || movie.title;
         const bestMovieElement = document.querySelector('#best-movie');
         bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
@@ -141,7 +141,7 @@ async function loadTopRatedMovies(genre, containerSelector) {
     movieGrid.textContent = ''; // Efface le contenu existant
     
     // La première URL récupère les 5 premiers films, la deuxième URL (avec page=2) récupère les 5 films suivants
-    const baseUrls = [`${API.baseUrl}?sort_by=-imdb_score`, `${API.baseUrl}?page=2&sort_by=-imdb_score`];
+    const baseUrls = [`${API_URLS.BASE_URL}?sort_by=-imdb_score`, `${API_URLS.BASE_URL}?page=2&sort_by=-imdb_score`];
     const urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
     try {
         const results = (await Promise.all(urls.map(fetchData)))
@@ -192,7 +192,7 @@ function addMovieDetailsEvent(selector, callback) {
     document.querySelectorAll(selector).forEach(element => {
         element.addEventListener('click', async (event) => {
             const movieId = event.target.getAttribute('data-movie-id');
-            const movie = await fetchData(`${API.baseUrl}${movieId}`);
+            const movie = await fetchData(`${API_URLS.BASE_URL}${movieId}`);
             callback(movie);
         });
     });
@@ -239,13 +239,12 @@ async function initialize() {
 }
 
 async function loadInitialData() {
-    // Est-ce que page 1 fait gagner de temps ???? TODO
-    const bestMovieUrl = `${API.baseUrl}?page=1&sort_by=-imdb_score`;
+    const bestMovieUrl = `${API_URLS.BASE_URL}?page=1&sort_by=-imdb_score`;
     await loadBestMovie(bestMovieUrl);
     await loadTopRatedMovies('', '#top-rated-movies');
     await loadTopRatedMovies('Crime', '#categorie-1');
     await loadTopRatedMovies('Romance', '#categorie-2');
-    await loadCategories(API.genresUrl);
+    await loadCategories(API_URLS.GENRES_URL);
 }
 
 function setupCategoryChangeEvent() {
