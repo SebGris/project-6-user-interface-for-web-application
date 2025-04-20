@@ -138,68 +138,71 @@ function updateMovieVisibility(containerSelector) {
     setupVisibilityButtons(containerSelector, movies, visibleCount);
 }
 
-// Fonction pour charger les 6 films les mieux notés
-async function loadTopRatedMovies(genre, containerSelector) {
-    let container = document.querySelector(containerSelector);
-    // Si un genre est spécifié, met à jour le titre de la section
-    if (genre) container.querySelector('h2').textContent = genre;
-    
-    let movieGrid = container.querySelector('.movie-grid');
-    // Efface le contenu existant dans la grille des films
-    movieGrid.textContent = '';
-    
-    // Prépare les URLs pour récupérer les films (page 1 et page 2)
+// Fonction pour récupérer les films les mieux notés
+async function fetchTopRatedMovies(genre) {
     let baseUrls = [`${API_URLS.TITLES_URL}?sort_by=-imdb_score`, `${API_URLS.TITLES_URL}?page=2&sort_by=-imdb_score`];
     let urls = genre ? baseUrls.map(url => `${url}&genre=${genre}`) : baseUrls;
 
     try {
-        // Récupère les données des deux pages et limite les résultats à 6 films
         let results = (await Promise.all(urls.map(fetchData)))
             .flatMap(data => data.results)
             .slice(0, 6);
-
-        // Parcourt les films récupérés pour les afficher
-        results.forEach(movie => {
-            let movieItem = document.createElement('div');
-            movieItem.className = 'movie-item';
-
-            // Crée l'image du film
-            let img = document.createElement('img');
-            img.src = movie.image_url;
-            img.alt = `Affiche du film ${movie.original_title || movie.title}`;
-            img.className = 'movie-image';
-            img.setAttribute('data-movie-id', movie.id);
-
-            // Crée une superposition pour afficher le titre et le bouton de détails
-            let overlay = document.createElement('div');
-            overlay.className = 'overlay';
-
-            let title = document.createElement('h1');
-            title.className = 'movie-title';
-            title.textContent = movie.original_title || movie.title;
-
-            let button = document.createElement('button');
-            button.className = 'details-button';
-            button.setAttribute('data-movie-id', movie.id);
-            button.textContent = 'Détails';
-
-            // Ajoute les éléments à la superposition et à l'élément du film
-            overlay.appendChild(title);
-            overlay.appendChild(button);
-            movieItem.appendChild(img);
-            movieItem.appendChild(overlay);
-            movieGrid.appendChild(movieItem);
-        });
+        return results;
     } catch (error) {
-        // Gère les erreurs lors de la récupération des films
-        console.error('Erreur lors du chargement des films les mieux notés :', error);
+        console.error('Erreur lors de la récupération des films les mieux notés :', error);
+        return [];
     }
+}
 
-    // Ajoute des événements pour afficher les détails des films
-    addMovieDetailsEvent('.movie-image', (movie) => toggleModal(true, movie));
-    addMovieDetailsEvent('.details-button', (movie) => toggleModal(true, movie));
+// Fonction pour créer les éléments DOM des films
+function createMovieElements(movies, containerSelector) {
+    let container = document.querySelector(containerSelector);
+    let movieGrid = container.querySelector('.movie-grid');
+    movieGrid.textContent = ''; // Efface le contenu existant
 
-    // Met à jour l'affichage des films en fonction de la taille de l'écran
+    movies.forEach(movie => {
+        let movieItem = document.createElement('div');
+        movieItem.className = 'movie-item';
+
+        let img = document.createElement('img');
+        img.src = movie.image_url;
+        img.alt = `Affiche du film ${movie.original_title || movie.title}`;
+        img.className = 'movie-image';
+        img.setAttribute('data-movie-id', movie.id);
+
+        let overlay = document.createElement('div');
+        overlay.className = 'overlay';
+
+        let title = document.createElement('h1');
+        title.className = 'movie-title';
+        title.textContent = movie.original_title || movie.title;
+
+        let button = document.createElement('button');
+        button.className = 'details-button';
+        button.setAttribute('data-movie-id', movie.id);
+        button.textContent = 'Détails';
+
+        overlay.appendChild(title);
+        overlay.appendChild(button);
+        movieItem.appendChild(img);
+        movieItem.appendChild(overlay);
+        movieGrid.appendChild(movieItem);
+    });
+}
+
+// Fonction pour configurer les événements des films
+function setupMovieEvents(containerSelector) {
+    addMovieDetailsEvent(`${containerSelector} .movie-image`, (movie) => toggleModal(true, movie));
+    addMovieDetailsEvent(`${containerSelector} .details-button`, (movie) => toggleModal(true, movie));
+}
+
+async function loadTopRatedMovies(genre, containerSelector) {
+    let container = document.querySelector(containerSelector);
+    if (genre) container.querySelector('h2').textContent = genre;
+
+    let movies = await fetchTopRatedMovies(genre);
+    createMovieElements(movies, containerSelector);
+    setupMovieEvents(containerSelector);
     updateMovieVisibility(containerSelector);
 }
 
@@ -255,21 +258,36 @@ function setupResizeEvents() {
     });
 }
 
+// Fonction pour charger le meilleur film
+async function loadBestMovieData() {
+    let bestMovieUrl = `${API_URLS.TITLES_URL}?page=1&sort_by=-imdb_score`;
+    await loadBestMovie(bestMovieUrl);
+}
+
+// Fonction pour charger les films les mieux notés
+async function loadTopRatedMoviesData() {
+    await loadTopRatedMovies('', '#top-rated-movies');
+    await loadTopRatedMovies('Crime', '#categorie-1');
+    await loadTopRatedMovies('Romance', '#categorie-2');
+}
+
+// Fonction pour charger les catégories
+async function loadCategoriesData() {
+    await loadCategories(API_URLS.GENRES_URL);
+}
+
+async function loadInitialData() {
+    await loadBestMovieData();
+    await loadTopRatedMoviesData();
+    await loadCategoriesData();
+}
+
 // Fonction principale d'initialisation
 async function initialize() {
     await loadInitialData();
     setupCategoryChangeEvent();
     setupModalEvents();
     setupResizeEvents();
-}
-
-async function loadInitialData() {
-    let bestMovieUrl = `${API_URLS.TITLES_URL}?page=1&sort_by=-imdb_score`;
-    await loadBestMovie(bestMovieUrl);
-    await loadTopRatedMovies('', '#top-rated-movies');
-    await loadTopRatedMovies('Crime', '#categorie-1');
-    await loadTopRatedMovies('Romance', '#categorie-2');
-    await loadCategories(API_URLS.GENRES_URL);
 }
 
 function setupCategoryChangeEvent() {
