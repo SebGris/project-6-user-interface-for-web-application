@@ -16,7 +16,6 @@ async function fetchData(url) {
 
 // Remplit les éléments de la modale avec les informations d'un film
 function updateModalContent(movie) {
-    let modal = document.getElementById('movie-modal');
     let movieTitle = movie.original_title || movie.title;
 
     let worldwide_gross_income = movie.worldwide_gross_income 
@@ -34,6 +33,7 @@ function updateModalContent(movie) {
         '.modal-actors .actors-list': movie.actors.join(', ')
     };
 
+    let modal = document.getElementById('movie-modal');
     for (let [selector, textContent] of Object.entries(modalElements)) {
         modal.querySelector(selector).textContent = textContent;
     }
@@ -45,12 +45,11 @@ function updateModalContent(movie) {
 
 // Affiche la modale si "display" est true, sinon la masque
 function toggleModal(display, movie = null) {
-    let modal = document.getElementById('movie-modal');
-
     if (display && movie) {
         updateModalContent(movie);
     }
 
+    let modal = document.getElementById('movie-modal');
     modal.style.display = display ? 'flex' : 'none';
 }
 
@@ -108,11 +107,10 @@ function setupVisibilityButtons(containerSelector, movies, visibleCount) {
 function updateMovieVisibility(containerSelector) {
     let container = document.querySelector(containerSelector);
     let movies = container.querySelectorAll('.movie-item');
-    let isTablet = window.matchMedia('(max-width: 768px)').matches;
-    let isMobile = window.matchMedia('(max-width: 480px)').matches;
-
     let visibleCount = movies.length;
 
+    let isMobile = window.matchMedia('(max-width: 480px)').matches;
+    let isTablet = window.matchMedia('(max-width: 768px)').matches;
     if (isMobile) {
         visibleCount = 2;
     } else if (isTablet) {
@@ -218,7 +216,7 @@ async function fetchCategories(url) {
 
     while (url) {
         try {
-            let { results, next } = await fetchData(url);
+            let { results, next } = await fetchData(url); // Extrait les propriétés `results` et `next`
             categories = [...categories, ...results];
             url = next;
         } catch (error) {
@@ -232,21 +230,20 @@ async function fetchCategories(url) {
 
 // Retourne une liste des films d'une URL donnée, avec un nombre maximum de films
 async function fetchMovies(url, numberOfMovies) {
-    try {
-        let movies = [];
+    let movies = [];
 
-        while (url && movies.length < numberOfMovies) {
-            // Extrait les propriétés `results` et `next`
-            let { results, next } = await fetchData(url);
+    while (url && movies.length < numberOfMovies) {
+        try {
+            let { results, next } = await fetchData(url); // Extrait les propriétés `results` et `next`
             movies = [...movies, ...results];
             url = next;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des films :', error);
+            return [];
         }
-
-        return movies.slice(0, numberOfMovies);
-    } catch (error) {
-        console.error('Erreur lors de la récupération des films :', error);
-        return [];
     }
+    
+    return movies.slice(0, numberOfMovies);
 }
 
 // Remplit la liste déroulante avec les catégories récupérées
