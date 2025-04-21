@@ -1,4 +1,4 @@
-# JustStreamIt
+# Projet JustStreamIt
 Objectif : développer un site web qui permettra à nos abonnés de visualiser en temps réel des films intéressants.
 
 ## Maquette
