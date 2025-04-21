@@ -18,7 +18,7 @@ h1, h2, h3, label, select {
 }
 
 h1 {
-    padding-left: 20px; /* Ajustez la valeur selon vos besoins */
+    padding-left: 20px;
 }
 
 /* Logo et en-tête */
@@ -69,7 +69,7 @@ h1 {
 }
 
 .movie-details .movie-synopsis {
-    font-size: 1.6em; /* Augmentez la taille de police selon vos besoins */
+    font-size: 1.6em; 
 }
 
 .movie-details .details-button {
@@ -361,11 +361,6 @@ h1 {
 
     .movie-frame {
         text-align: center;
-    }
-
-    .see-more-button {
-        padding: 8px 20px;
-        font-size: 14px;
     }
 
     .movie-item:nth-child(-n+2) {
