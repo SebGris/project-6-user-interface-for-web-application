@@ -5,11 +5,17 @@ const API_URLS = {
 
 // Prend une URL en paramètre et retourne les données JSON de la réponse
 async function fetchData(url) {
-    let response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`);
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données :', error);
+        return null; // Return null or handle the error as needed
     }
-    return response.json();
 }
 
 // Remplit les éléments de la modale avec les informations d'un film

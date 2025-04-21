@@ -24,3 +24,6 @@ Démarrez le serveur avec
 ```bash
 python manage.py runserver
 ```
+### Utiliser l'API Fetch
+
+https://developer.mozilla.org/fr/docs/Web/API/Fetch_API/Using_Fetch
