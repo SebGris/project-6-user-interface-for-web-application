@@ -250,13 +250,16 @@ function setupCategoryChangeListener() {
     let categorySection = document.getElementById('other-category');
     let categorySelect = document.getElementById('other-categories');
     if (categorySelect.value) {
-        loadTopRatedMovies(categorySelect.value, categorySection);
+        loadTopRatedMovies(categorySelect.value, categorySection).catch(error => {
+            console.error('Erreur lors du chargement des films de la catégorie sélectionnée :', error);
+        });
     }
     categorySelect.addEventListener('change', (event) => {
         let selectedCategory = event.target.value;
-
         if (selectedCategory) {
-            loadTopRatedMovies(selectedCategory, categorySection);
+            loadTopRatedMovies(selectedCategory, categorySection).catch(error => {
+                console.error('Erreur lors du chargement des films de la catégorie sélectionnée :', error);
+            });
         }
     });
 }
@@ -274,13 +277,17 @@ async function loadBestMovieData() {
 
 // Charge les films pour la section principale et les catégories
 async function loadTopRatedMoviesData() {
-    let categories = document.querySelectorAll('.category');
-    categories.forEach((category) => {
-        let genre = category.id === 'top-rated-movies' 
-            ? '' 
-            : category.querySelector('h2').textContent.trim();
-        loadTopRatedMovies(genre, category);
-    });
+    try {
+        let categories = document.querySelectorAll('.category');
+        for (let category of categories) {
+            let genre = category.id === 'top-rated-movies' 
+                ? '' 
+                : category.querySelector('h2').textContent.trim();
+            await loadTopRatedMovies(genre, category);
+        };
+    } catch (error) {
+        console.error('Erreur lors du chargement des films les mieux notés :', error);
+    }
 }
 
 // Charge le meilleur film, les films les mieux notés et les catégories
