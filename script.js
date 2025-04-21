@@ -3,19 +3,36 @@ const API_URLS = {
     GENRE_URL: 'http://localhost:8000/api/v1/genres/',
 };
 
-// Prend une URL en paramètre et retourne les données JSON de la réponse
-async function fetchData(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Erreur lors de la récupération des données :', error);
-        return null;
-    }
+// Lance la fonction d'initialisation lorsque le DOM est prêt
+document.addEventListener('DOMContentLoaded', initialize);
+
+// Configure les événements et charge les données initiales
+function initialize() {
+    loadInitialData();
+    initializeModalEventListeners();
+    setupResizeListeners();
+}
+
+// Charge le meilleur film, les films les mieux notés et les catégories
+async function loadInitialData() {
+    loadBestMovieData();
+    loadCategories(API_URLS.GENRE_URL);
+    // Attendre le chargement des films avant de configurer les événements
+    await loadTopRatedMoviesData();
+    initializeCategoryListener();
+}
+
+// Fonction pour charger le meilleur film
+async function loadBestMovieData() {
+    let sortedMovieListUrl = `${API_URLS.TITLE_URL}?page=1&sort_by=-imdb_score`;
+    let movie = await fetchBestMovieData(sortedMovieListUrl);
+    updateBestMovieUI(movie);
+}
+
+// Combine la récupération des catégories et la mise à jour de la liste déroulante
+async function loadCategories(url) {
+    let categories = await fetchCategories(url);
+    updateCategorySelect(categories);
 }
 
 // Remplit les éléments de la modale avec les informations d'un film
@@ -43,15 +60,6 @@ function updateModalContent(movie) {
     poster.alt = `Affiche du film ${movieTitle}`;
 }
 
-// Affiche la modale si "display" est true, sinon la masque
-function toggleModal(display, movie = null) {
-    if (display && movie) {
-        updateModalContent(movie);
-    }
-    let modal = document.getElementById('movie-modal');
-    modal.style.display = display ? 'flex' : 'none';
-}
-
 // Récupère les données du meilleur film
 async function fetchBestMovieData(sortedMovieUrl) {
     let { results: sortedMovieList } = await fetchData(sortedMovieUrl);
@@ -59,6 +67,21 @@ async function fetchBestMovieData(sortedMovieUrl) {
         throw new Error("Aucun film trouvé.");
     }
     return fetchData(`${API_URLS.TITLE_URL}${sortedMovieList[0].id}`);
+}
+
+// Prend une URL en paramètre et retourne les données JSON de la réponse
+async function fetchData(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données :', error);
+        return null;
+    }
 }
 
 // Met à jour l'interface utilisateur avec les données du meilleur film
@@ -72,54 +95,22 @@ function updateBestMovieUI(movie) {
     bestMovieElement.querySelector('.best-details-button').addEventListener('click', () => toggleModal(true, movie));
 }
 
-// Contrôle la visibilité des films en fonction du nombre visible ou de l'état "voir tout"
-function updateMovieDisplay(movies, visibleCount, showAll) {
-    movies.forEach((movie, index) => {
-        movie.style.display = showAll || index < visibleCount ? 'block' : 'none';
-    });
+// Affiche la modale si "display" est true, sinon la masque
+function toggleModal(display, movie = null) {
+    if (display && movie) {
+        updateModalContent(movie);
+    }
+    let modal = document.getElementById('movie-modal');
+    modal.style.display = display ? 'flex' : 'none';
 }
 
-// Permet de basculer entre l'affichage complet ou partiel des films
-function setupVisibilityButtons(container, movies, visibleCount) {
-    let seeMoreButton = container.querySelector('.see-more-button');
-    let seeLessButton = container.querySelector('.see-less-button');
-    seeMoreButton.addEventListener('click', () => {
-        updateMovieDisplay(movies, visibleCount, true); // Affiche tous les films
-        seeMoreButton.style.display = 'none';
-        seeLessButton.style.display = 'block';
-    });
-    seeLessButton.addEventListener('click', () => {
-        updateMovieDisplay(movies, visibleCount, false); // Affiche uniquement les films visibles
-        seeMoreButton.style.display = 'block';
-        seeLessButton.style.display = 'none';
-    });
-}
-
-// Adapte le nombre de films visibles selon la taille de l'écran
-function updateMovieVisibility(container) {
-    let movies = container.querySelectorAll('.movie-item');
-    let visibleCount = movies.length;
-    let isMobile = window.matchMedia('(max-width: 480px)').matches;
-    let isTablet = window.matchMedia('(max-width: 768px)').matches;
-    if (isMobile) {
-        visibleCount = 2;
-    } else if (isTablet) {
-        visibleCount = 4;
-    }
-    movies.forEach((movie, index) => {
-        movie.style.display = index < visibleCount ? 'block' : 'none';
-    });
-    let seeMoreButton = container.querySelector('.see-more-button');
-    let seeLessButton = container.querySelector('.see-less-button');
-    // Met à jour l'état des boutons
-    if (movies.length > visibleCount) {
-        seeMoreButton.style.display = 'block';
-        seeLessButton.style.display = 'none';
-    } else {
-        seeMoreButton.style.display = 'none';
-        seeLessButton.style.display = 'none';
-    }
-    setupVisibilityButtons(container, movies, visibleCount);
+// Charge les films d'une catégorie et met à jour l'affichage
+async function loadTopRatedMovies(genre, container) {
+    let movies = await fetchTopRatedMovies(genre);
+    createMovieElements(movies, container);
+    updateMovieVisibility(container);
+    addMovieDetailsEvent(`.movie-image`, (movie) => toggleModal(true, movie));
+    addMovieDetailsEvent(`.details-button`, (movie) => toggleModal(true, movie));
 }
 
 // Retourne une liste des films triés par score IMDB, avec ou sans filtre de genre
@@ -157,15 +148,6 @@ function createMovieElements(movies, container) {
         movieItem.appendChild(overlay);
         movieGrid.appendChild(movieItem);
     });
-}
-
-// Charge les films d'une catégorie et met à jour l'affichage
-async function loadTopRatedMovies(genre, container) {
-    let movies = await fetchTopRatedMovies(genre);
-    createMovieElements(movies, container);
-    updateMovieVisibility(container);
-    addMovieDetailsEvent(`.movie-image`, (movie) => toggleModal(true, movie));
-    addMovieDetailsEvent(`.details-button`, (movie) => toggleModal(true, movie));
 }
 
 // Configure les clics sur les images ou boutons pour ouvrir la modale
@@ -223,34 +205,6 @@ function updateCategorySelect(categories) {
     });
 }
 
-// Combine la récupération des catégories et la mise à jour de la liste déroulante
-async function loadCategories(url) {
-    let categories = await fetchCategories(url);
-    updateCategorySelect(categories);
-}
-
-// Met à jour la visibilité des films lorsque la taille de l'écran change
-function setupResizeListeners() {
-    let containers = document.querySelectorAll('.category');
-    window.addEventListener('resize', () => {
-        containers.forEach(container => updateMovieVisibility(container));
-    });
-}
-
-// Ajoute des écouteurs pour fermer la modale via les boutons ou un clic extérieur
-function setupModalHandlers() {
-    let closeModalButton = document.querySelector('.modal-x-close');
-    closeModalButton.addEventListener('click', () => toggleModal(false));
-    let closeButton = document.querySelector('.close-button');
-    closeButton.addEventListener('click', () => toggleModal(false));
-    let modal = document.getElementById('movie-modal');
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            toggleModal(false);
-        }
-    });
-}
-
 // Charge les films de la catégorie sélectionnée dans la liste déroulante
 async function initializeCategoryListener() {
     let categorySection = document.getElementById('other-category');
@@ -270,13 +224,6 @@ async function initializeCategoryListener() {
     });
 }
 
-// Fonction pour charger le meilleur film
-async function loadBestMovieData() {
-    let sortedMovieListUrl = `${API_URLS.TITLE_URL}?page=1&sort_by=-imdb_score`;
-    let movie = await fetchBestMovieData(sortedMovieListUrl);
-    updateBestMovieUI(movie);
-}
-
 // Charge les films pour la section principale et les catégories
 async function loadTopRatedMoviesData() {
     try {
@@ -292,20 +239,73 @@ async function loadTopRatedMoviesData() {
     }
 }
 
-// Charge le meilleur film, les films les mieux notés et les catégories
-async function loadInitialData() {
-    await loadBestMovieData();
-    await loadCategories(API_URLS.GENRE_URL);
-    await loadTopRatedMoviesData();
-    initializeCategoryListener();
+// Ajoute des écouteurs pour fermer la modale via les boutons ou un clic extérieur
+function initializeModalEventListeners() {
+    let closeModalButton = document.querySelector('.modal-x-close');
+    closeModalButton.addEventListener('click', () => toggleModal(false));
+    let closeButton = document.querySelector('.close-button');
+    closeButton.addEventListener('click', () => toggleModal(false));
+    let modal = document.getElementById('movie-modal');
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            toggleModal(false);
+        }
+    });
 }
 
-// Configure les événements et charge les données initiales
-function initialize() {
-    loadInitialData();
-    setupModalHandlers();
-    setupResizeListeners();
+// Met à jour la visibilité des films lorsque la taille de l'écran change
+function setupResizeListeners() {
+    let containers = document.querySelectorAll('.category');
+    window.addEventListener('resize', () => {
+        containers.forEach(container => updateMovieVisibility(container));
+    });
 }
 
-// Lance la fonction d'initialisation lorsque le DOM est prêt
-document.addEventListener('DOMContentLoaded', initialize);
+// Adapte le nombre de films visibles selon la taille de l'écran
+function updateMovieVisibility(container) {
+    let movies = container.querySelectorAll('.movie-item');
+    let visibleCount = movies.length;
+    let isMobile = window.matchMedia('(max-width: 480px)').matches;
+    let isTablet = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile) {
+        visibleCount = 2;
+    } else if (isTablet) {
+        visibleCount = 4;
+    }
+    movies.forEach((movie, index) => {
+        movie.style.display = index < visibleCount ? 'block' : 'none';
+    });
+    let seeMoreButton = container.querySelector('.see-more-button');
+    let seeLessButton = container.querySelector('.see-less-button');
+    // Met à jour l'état des boutons
+    if (movies.length > visibleCount) {
+        seeMoreButton.style.display = 'block';
+        seeLessButton.style.display = 'none';
+    } else {
+        seeMoreButton.style.display = 'none';
+        seeLessButton.style.display = 'none';
+    }
+    setupVisibilityButtons(container, movies, visibleCount);
+}
+
+// Permet de basculer entre l'affichage complet ou partiel des films
+function setupVisibilityButtons(container, movies, visibleCount) {
+    let seeMoreButton = container.querySelector('.see-more-button');
+    let seeLessButton = container.querySelector('.see-less-button');
+    seeMoreButton.addEventListener('click', () => {
+        updateMovieDisplay(movies, visibleCount, true); // Affiche tous les films
+        seeMoreButton.style.display = 'none';
+        seeLessButton.style.display = 'block';
+    });
+    seeLessButton.addEventListener('click', () => {
+        updateMovieDisplay(movies, visibleCount, false); // Affiche uniquement les films visibles
+        seeMoreButton.style.display = 'block';
+        seeLessButton.style.display = 'none';
+    });
+}
+// Contrôle la visibilité des films en fonction du nombre visible ou de l'état "voir tout"
+function updateMovieDisplay(movies, visibleCount, showAll) {
+    movies.forEach((movie, index) => {
+        movie.style.display = showAll || index < visibleCount ? 'block' : 'none';
+    });
+}
