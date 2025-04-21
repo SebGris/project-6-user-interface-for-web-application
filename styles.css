@@ -127,11 +127,6 @@ h1 {
     background-color: var(--primary-color-hover);
 }
 
-/* Section des films les mieux notés */
-#top-rated-movies {
-    margin: 20px 0;
-}
-
 /* Modale */
 .modal {
     /* La modale est initialement masquée */

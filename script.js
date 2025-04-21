@@ -85,8 +85,7 @@ function updateMovieDisplay(movies, visibleCount, showAll) {
 }
 
 // Permet de basculer entre l'affichage complet ou partiel des films
-function setupVisibilityButtons(containerSelector, movies, visibleCount) {
-    let container = document.querySelector(containerSelector);
+function setupVisibilityButtons(container, movies, visibleCount) {
     let seeMoreButton = container.querySelector('.see-more-button');
     let seeLessButton = container.querySelector('.see-less-button');
 
@@ -104,8 +103,7 @@ function setupVisibilityButtons(containerSelector, movies, visibleCount) {
 }
 
 // Adapte le nombre de films visibles selon la taille de l'écran
-function updateMovieVisibility(containerSelector) {
-    let container = document.querySelector(containerSelector);
+function updateMovieVisibility(container) {
     let movies = container.querySelectorAll('.movie-item');
     let visibleCount = movies.length;
 
@@ -133,7 +131,7 @@ function updateMovieVisibility(containerSelector) {
         seeLessButton.style.display = 'none';
     }
 
-    setupVisibilityButtons(containerSelector, movies, visibleCount);
+    setupVisibilityButtons(container, movies, visibleCount);
 }
 
 // Retourne une liste des films triés par score IMDB, avec ou sans filtre de genre
@@ -146,8 +144,7 @@ async function fetchTopRatedMovies(genre) {
 }
 
 // Génère dynamiquement les éléments HTML pour afficher les films dans un conteneur
-function createMovieElements(movies, containerSelector) {
-    let container = document.querySelector(containerSelector);
+function createMovieElements(movies, container) {
     let movieGrid = container.querySelector('.movie-grid');
     movieGrid.textContent = '';
 
@@ -181,22 +178,13 @@ function createMovieElements(movies, containerSelector) {
     });
 }
 
-// Ajoute des écouteurs pour afficher les détails des films dans la modale
-function setupMovieEvents(containerSelector) {
-    addMovieDetailsEvent(`${containerSelector} .movie-image`, (movie) => toggleModal(true, movie));
-    addMovieDetailsEvent(`${containerSelector} .details-button`, (movie) => toggleModal(true, movie));
-}
-
-// Charge les films d'une catégorie spécifique et met à jour l'affichage
-async function loadTopRatedMovies(genre, containerSelector) {
-    let container = document.querySelector(containerSelector);
-
-    if (genre) container.querySelector('h2').textContent = genre;
-
+// Charge les films d'une catégorie et met à jour l'affichage
+async function loadTopRatedMovies(genre, container) {
     let movies = await fetchTopRatedMovies(genre);
-    createMovieElements(movies, containerSelector);
-    setupMovieEvents(containerSelector);
-    updateMovieVisibility(containerSelector);
+    createMovieElements(movies, container);
+    updateMovieVisibility(container);
+    addMovieDetailsEvent(`.movie-image`, (movie) => toggleModal(true, movie));
+    addMovieDetailsEvent(`.details-button`, (movie) => toggleModal(true, movie));
 }
 
 // Configure les clics sur les images ou boutons pour ouvrir la modale
@@ -267,10 +255,9 @@ async function loadCategories(url) {
 
 // Met à jour la visibilité des films lorsque la taille de l'écran change
 function setupResizeListeners() {
-    let containers = ['#top-rated-movies', '#categorie-1', '#categorie-2', '#other-category'];
-
+    let containers = document.querySelectorAll('.category');
     window.addEventListener('resize', () => {
-        containers.forEach(updateMovieVisibility);
+        containers.forEach(container => updateMovieVisibility(container));
     });
 }
 
@@ -292,17 +279,18 @@ function setupModalHandlers() {
 
 // Charge les films de la catégorie sélectionnée dans la liste déroulante
 function setupCategoryChangeListener() {
+    let categorySection = document.getElementById('other-category');
     let categorySelect = document.getElementById('other-categories');
 
     if (categorySelect.value) {
-        loadTopRatedMovies(categorySelect.value, '#other-category');
+        loadTopRatedMovies(categorySelect.value, categorySection);
     }
 
     categorySelect.addEventListener('change', (event) => {
         let selectedCategory = event.target.value;
 
         if (selectedCategory) {
-            loadTopRatedMovies(selectedCategory, '#other-category');
+            loadTopRatedMovies(selectedCategory, categorySection);
         }
     });
 }
@@ -321,21 +309,24 @@ async function loadBestMovieData() {
 
 // Charge les films pour la section principale et les catégories
 async function loadTopRatedMoviesData() {
-    await loadTopRatedMovies('', '#top-rated-movies');
-    await loadTopRatedMovies('Crime', '#categorie-1');
-    await loadTopRatedMovies('Romance', '#categorie-2');
-}
+    let categories = document.querySelectorAll('.category');
 
-// Récupère et affiche les catégories dans la liste déroulante
-async function loadCategoriesData() {
-    await loadCategories(API_URLS.GENRE_URL);
+    categories.forEach((category) => {
+        let genre = category.id === 'top-rated-movies' 
+            ? '' 
+            : category.querySelector('h2').textContent.trim();
+
+        loadTopRatedMovies(genre, category);
+    });
 }
 
 // Charge le meilleur film, les films les mieux notés et les catégories
 async function loadInitialData() {
-    await loadBestMovieData();
+    // Récupère en premier les catégories pour la liste déroulante
+    await loadCategories(API_URLS.GENRE_URL);
+    // Ensuite on affiche les films dans les sections
     await loadTopRatedMoviesData();
-    await loadCategoriesData();
+    await loadBestMovieData();
 }
 
 // Configure les événements et charge les données initiales
