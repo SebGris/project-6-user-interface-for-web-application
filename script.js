@@ -35,12 +35,6 @@ async function loadCategories(url) {
     updateCategorySelect(categories);
 }
 
-// Fonction utilitaire pour mettre à jour le contenu d'un élément HTML
-function updateElementContent(selector, content, parent = document) {
-    const element = parent.querySelector(selector);
-    if (element) element.textContent = content;
-}
-
 // Remplit les éléments de la modale avec les informations d'un film
 function updateModalContent(movie) {
     const modal = document.getElementById('movie-modal');
@@ -65,6 +59,12 @@ function updateModalContent(movie) {
     const poster = modal.querySelector('.modal-poster img');
     poster.src = movie.image_url;
     poster.alt = `Affiche du film ${movieTitle}`;
+}
+
+// Fonction utilitaire pour mettre à jour le contenu d'un élément HTML
+function updateElementContent(selector, content, parent = document) {
+    const element = parent.querySelector(selector);
+    if (element) element.textContent = content;
 }
 
 // Récupère les données du meilleur film
