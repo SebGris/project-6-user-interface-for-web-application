@@ -35,27 +35,34 @@ async function loadCategories(url) {
     updateCategorySelect(categories);
 }
 
+// Fonction utilitaire pour mettre à jour le contenu d'un élément HTML
+function updateElementContent(selector, content, parent = document) {
+    const element = parent.querySelector(selector);
+    if (element) element.textContent = content;
+}
+
 // Remplit les éléments de la modale avec les informations d'un film
 function updateModalContent(movie) {
-    let movieTitle = movie.original_title || movie.title;
-    let worldwide_gross_income = movie.worldwide_gross_income 
+    const modal = document.getElementById('movie-modal');
+    const movieTitle = movie.original_title || movie.title;
+    const worldwideGross = movie.worldwide_gross_income 
         ? `$${(movie.worldwide_gross_income / 1_000_000).toFixed(1)}m` 
         : 'non renseigné';
-    let modalElements = {
+
+    const modalElements = {
         '.modal-title h2': movieTitle,
         '#year-genre': `${movie.year} - ${movie.genres.join(', ')}`,
         '#rating-duration': `PG-${movie.rated} - ${movie.duration} minutes (${movie.countries.join(' / ')})`,
         '#score': `Score IMDB: ${movie.imdb_score}/10`,
-        '#box-office': `Recettes au box-office: ${worldwide_gross_income}`,
+        '#box-office': `Recettes au box-office: ${worldwideGross}`,
         '#directors': movie.directors.join(', '),
         '.modal-synopsis .movie-synopsis': movie.description,
         '.modal-actors .actors-list': movie.actors.join(', ')
     };
-    let modal = document.getElementById('movie-modal');
-    for (let [selector, textContent] of Object.entries(modalElements)) {
-        modal.querySelector(selector).textContent = textContent;
-    }
-    let poster = modal.querySelector('.modal-poster img');
+
+    Object.entries(modalElements).forEach(([selector, content]) => updateElementContent(selector, content, modal));
+
+    const poster = modal.querySelector('.modal-poster img');
     poster.src = movie.image_url;
     poster.alt = `Affiche du film ${movieTitle}`;
 }
@@ -109,8 +116,7 @@ async function loadTopRatedMovies(genre, container) {
     let movies = await fetchTopRatedMovies(genre);
     createMovieElements(movies, container);
     updateMovieVisibility(container);
-    addMovieDetailsEvent(`.movie-image`, (movie) => toggleModal(true, movie));
-    addMovieDetailsEvent(`.details-button`, (movie) => toggleModal(true, movie));
+    addMovieDetailsEvent(['.movie-image', '.details-button'], (movie) => toggleModal(true, movie));
 }
 
 // Retourne une liste des films triés par score IMDB, avec ou sans filtre de genre
@@ -151,12 +157,14 @@ function createMovieElements(movies, container) {
 }
 
 // Configure les clics sur les images ou boutons pour ouvrir la modale
-function addMovieDetailsEvent(selector, callback) {
-    document.querySelectorAll(selector).forEach(element => {
-        element.addEventListener('click', async (event) => {
-            let movieId = event.target.getAttribute('data-movie-id');
-            let movie = await fetchData(`${API_URLS.TITLE_URL}${movieId}`);
-            callback(movie);
+function addMovieDetailsEvent(selectors, callback) {
+    selectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach(element => {
+            element.addEventListener('click', async (event) => {
+                const movieId = event.target.getAttribute('data-movie-id');
+                const movie = await fetchData(`${API_URLS.TITLE_URL}${movieId}`);
+                callback(movie);
+            });
         });
     });
 }
@@ -263,49 +271,31 @@ function setupResizeListeners() {
 
 // Adapte le nombre de films visibles selon la taille de l'écran
 function updateMovieVisibility(container) {
-    let movies = container.querySelectorAll('.movie-item');
-    let visibleCount = movies.length;
-    let isMobile = window.matchMedia('(max-width: 480px)').matches;
-    let isTablet = window.matchMedia('(max-width: 768px)').matches;
-    if (isMobile) {
-        visibleCount = 2;
-    } else if (isTablet) {
-        visibleCount = 4;
-    }
+    const movies = container.querySelectorAll('.movie-item');
+    const isMobile = window.matchMedia('(max-width: 480px)').matches;
+    const isTablet = window.matchMedia('(max-width: 768px)').matches;
+    const visibleCount = isMobile ? 2 : isTablet ? 4 : movies.length;
+
     movies.forEach((movie, index) => {
         movie.style.display = index < visibleCount ? 'block' : 'none';
     });
-    let seeMoreButton = container.querySelector('.see-more-button');
-    let seeLessButton = container.querySelector('.see-less-button');
-    // Met à jour l'état des boutons
-    if (movies.length > visibleCount) {
-        seeMoreButton.style.display = 'block';
-        seeLessButton.style.display = 'none';
-    } else {
-        seeMoreButton.style.display = 'none';
-        seeLessButton.style.display = 'none';
-    }
+
     setupVisibilityButtons(container, movies, visibleCount);
 }
 
 // Permet de basculer entre l'affichage complet ou partiel des films
 function setupVisibilityButtons(container, movies, visibleCount) {
-    let seeMoreButton = container.querySelector('.see-more-button');
-    let seeLessButton = container.querySelector('.see-less-button');
-    seeMoreButton.addEventListener('click', () => {
-        updateMovieDisplay(movies, visibleCount, true); // Affiche tous les films
-        seeMoreButton.style.display = 'none';
-        seeLessButton.style.display = 'block';
-    });
-    seeLessButton.addEventListener('click', () => {
-        updateMovieDisplay(movies, visibleCount, false); // Affiche uniquement les films visibles
-        seeMoreButton.style.display = 'block';
-        seeLessButton.style.display = 'none';
-    });
-}
-// Contrôle la visibilité des films en fonction du nombre visible ou de l'état "voir tout"
-function updateMovieDisplay(movies, visibleCount, showAll) {
-    movies.forEach((movie, index) => {
-        movie.style.display = showAll || index < visibleCount ? 'block' : 'none';
-    });
+    const seeMoreButton = container.querySelector('.see-more-button');
+    const seeLessButton = container.querySelector('.see-less-button');
+
+    const toggleVisibility = (showAll) => {
+        movies.forEach((movie, index) => {
+            movie.style.display = showAll || index < visibleCount ? 'block' : 'none';
+        });
+        seeMoreButton.style.display = showAll ? 'none' : 'block';
+        seeLessButton.style.display = showAll ? 'block' : 'none';
+    };
+
+    seeMoreButton.addEventListener('click', () => toggleVisibility(true));
+    seeLessButton.addEventListener('click', () => toggleVisibility(false));
 }
