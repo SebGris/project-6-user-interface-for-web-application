@@ -153,6 +153,9 @@ h1 {
     padding: 20px;
     width: 80%;
     max-width: 600px;
+    max-height: 90vh; /* Limite la hauteur de la modale à 90% de la hauteur de la fenêtre */
+    overflow-y: auto; /* Ajoute un ascenseur vertical si le contenu dépasse */
+    box-sizing: border-box; /* Inclut le padding dans la hauteur totale */
 }
 
 /* Conteneur principal des sections */
