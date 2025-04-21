@@ -6,22 +6,18 @@ const API_URLS = {
 // Prend une URL en paramètre et retourne les données JSON de la réponse
 async function fetchData(url) {
     let response = await fetch(url);
-
     if (!response.ok) {
         throw new Error(`Erreur HTTP : ${response.status}`);
     }
-
     return response.json();
 }
 
 // Remplit les éléments de la modale avec les informations d'un film
 function updateModalContent(movie) {
     let movieTitle = movie.original_title || movie.title;
-
     let worldwide_gross_income = movie.worldwide_gross_income 
         ? `$${(movie.worldwide_gross_income / 1_000_000).toFixed(1)}m` 
         : 'non renseigné';
-
     let modalElements = {
         '.modal-title h2': movieTitle,
         '#year-genre': `${movie.year} - ${movie.genres.join(', ')}`,
@@ -32,12 +28,10 @@ function updateModalContent(movie) {
         '.modal-synopsis .movie-synopsis': movie.description,
         '.modal-actors .actors-list': movie.actors.join(', ')
     };
-
     let modal = document.getElementById('movie-modal');
     for (let [selector, textContent] of Object.entries(modalElements)) {
         modal.querySelector(selector).textContent = textContent;
     }
-
     let poster = modal.querySelector('.modal-poster img');
     poster.src = movie.image_url;
     poster.alt = `Affiche du film ${movieTitle}`;
@@ -48,7 +42,6 @@ function toggleModal(display, movie = null) {
     if (display && movie) {
         updateModalContent(movie);
     }
-
     let modal = document.getElementById('movie-modal');
     modal.style.display = display ? 'flex' : 'none';
 }
@@ -56,11 +49,9 @@ function toggleModal(display, movie = null) {
 // Récupère les données du meilleur film
 async function fetchBestMovieData(sortedMovieUrl) {
     let { results: sortedMovieList } = await fetchData(sortedMovieUrl);
-
     if (!sortedMovieList || sortedMovieList.length === 0) {
         throw new Error("Aucun film trouvé.");
     }
-
     return fetchData(`${API_URLS.TITLE_URL}${sortedMovieList[0].id}`);
 }
 
@@ -68,12 +59,10 @@ async function fetchBestMovieData(sortedMovieUrl) {
 function updateBestMovieUI(movie) {
     let movieTitle = movie.original_title || movie.title;
     let bestMovieElement = document.querySelector('#best-movie');
-
     bestMovieElement.querySelector('.movie-poster').src = movie.image_url;
     bestMovieElement.querySelector('.movie-poster').alt = `Affiche du film ${movieTitle}`;
     bestMovieElement.querySelector('.movie-details h3').textContent = movieTitle;
     bestMovieElement.querySelector('.movie-synopsis').textContent = movie.description;
-
     bestMovieElement.querySelector('.best-details-button').addEventListener('click', () => toggleModal(true, movie));
 }
 
@@ -88,13 +77,11 @@ function updateMovieDisplay(movies, visibleCount, showAll) {
 function setupVisibilityButtons(container, movies, visibleCount) {
     let seeMoreButton = container.querySelector('.see-more-button');
     let seeLessButton = container.querySelector('.see-less-button');
-
     seeMoreButton.addEventListener('click', () => {
         updateMovieDisplay(movies, visibleCount, true); // Affiche tous les films
         seeMoreButton.style.display = 'none';
         seeLessButton.style.display = 'block';
     });
-
     seeLessButton.addEventListener('click', () => {
         updateMovieDisplay(movies, visibleCount, false); // Affiche uniquement les films visibles
         seeMoreButton.style.display = 'block';
@@ -106,7 +93,6 @@ function setupVisibilityButtons(container, movies, visibleCount) {
 function updateMovieVisibility(container) {
     let movies = container.querySelectorAll('.movie-item');
     let visibleCount = movies.length;
-
     let isMobile = window.matchMedia('(max-width: 480px)').matches;
     let isTablet = window.matchMedia('(max-width: 768px)').matches;
     if (isMobile) {
@@ -114,14 +100,11 @@ function updateMovieVisibility(container) {
     } else if (isTablet) {
         visibleCount = 4;
     }
-
     movies.forEach((movie, index) => {
         movie.style.display = index < visibleCount ? 'block' : 'none';
     });
-
     let seeMoreButton = container.querySelector('.see-more-button');
     let seeLessButton = container.querySelector('.see-less-button');
-
     // Met à jour l'état des boutons
     if (movies.length > visibleCount) {
         seeMoreButton.style.display = 'block';
@@ -130,7 +113,6 @@ function updateMovieVisibility(container) {
         seeMoreButton.style.display = 'none';
         seeLessButton.style.display = 'none';
     }
-
     setupVisibilityButtons(container, movies, visibleCount);
 }
 
@@ -139,7 +121,6 @@ async function fetchTopRatedMovies(genre) {
     const DEFAULT_MOVIE_COUNT = 6;
     let sortedUrl = `${API_URLS.TITLE_URL}?sort_by=-imdb_score`;
     let finalUrl = genre ? `${sortedUrl}&genre=${genre}` : sortedUrl;
-
     return fetchMovies(finalUrl, DEFAULT_MOVIE_COUNT);
 }
 
@@ -147,29 +128,23 @@ async function fetchTopRatedMovies(genre) {
 function createMovieElements(movies, container) {
     let movieGrid = container.querySelector('.movie-grid');
     movieGrid.textContent = '';
-
     movies.forEach(movie => {
         let movieItem = document.createElement('div');
         movieItem.className = 'movie-item';
-
         let img = document.createElement('img');
         img.src = movie.image_url;
         img.alt = `Affiche du film ${movie.original_title || movie.title}`;
         img.className = 'movie-image';
         img.setAttribute('data-movie-id', movie.id);
-
         let overlay = document.createElement('div');
         overlay.className = 'overlay';
-
         let title = document.createElement('h1');
         title.className = 'movie-title';
         title.textContent = movie.original_title || movie.title;
-
         let button = document.createElement('button');
         button.className = 'details-button';
         button.setAttribute('data-movie-id', movie.id);
         button.textContent = 'Détails';
-
         overlay.appendChild(title);
         overlay.appendChild(button);
         movieItem.appendChild(img);
@@ -201,7 +176,6 @@ function addMovieDetailsEvent(selector, callback) {
 // Retourne une liste de toutes les catégories disponibles
 async function fetchCategories(url) {
     let categories = [];
-
     while (url) {
         try {
             let { results, next } = await fetchData(url); // Extrait les propriétés `results` et `next`
@@ -212,14 +186,12 @@ async function fetchCategories(url) {
             return [];
         }
     }
-
     return categories;
 }
 
 // Retourne une liste des films d'une URL donnée, avec un nombre maximum de films
 async function fetchMovies(url, numberOfMovies) {
     let movies = [];
-
     while (url && movies.length < numberOfMovies) {
         try {
             let { results, next } = await fetchData(url); // Extrait les propriétés `results` et `next`
@@ -230,7 +202,6 @@ async function fetchMovies(url, numberOfMovies) {
             return [];
         }
     }
-    
     return movies.slice(0, numberOfMovies);
 }
 
@@ -238,7 +209,6 @@ async function fetchMovies(url, numberOfMovies) {
 function updateCategorySelect(categories) {
     let categorySelect = document.getElementById('other-categories');
     categorySelect.textContent = '';
-
     categories.forEach(category => {
         let option = document.createElement('option');
         option.value = category.name;
@@ -265,10 +235,8 @@ function setupResizeListeners() {
 function setupModalHandlers() {
     let closeModalButton = document.querySelector('.modal-x-close');
     closeModalButton.addEventListener('click', () => toggleModal(false));
-
     let closeButton = document.querySelector('.close-button');
     closeButton.addEventListener('click', () => toggleModal(false));
-
     let modal = document.getElementById('movie-modal');
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
@@ -281,11 +249,9 @@ function setupModalHandlers() {
 function setupCategoryChangeListener() {
     let categorySection = document.getElementById('other-category');
     let categorySelect = document.getElementById('other-categories');
-
     if (categorySelect.value) {
         loadTopRatedMovies(categorySelect.value, categorySection);
     }
-
     categorySelect.addEventListener('change', (event) => {
         let selectedCategory = event.target.value;
 
@@ -298,7 +264,6 @@ function setupCategoryChangeListener() {
 // Fonction pour charger le meilleur film
 async function loadBestMovieData() {
     let sortedMovieListUrl = `${API_URLS.TITLE_URL}?page=1&sort_by=-imdb_score`;
-
     try {
         let movie = await fetchBestMovieData(sortedMovieListUrl);
         updateBestMovieUI(movie);
@@ -310,12 +275,10 @@ async function loadBestMovieData() {
 // Charge les films pour la section principale et les catégories
 async function loadTopRatedMoviesData() {
     let categories = document.querySelectorAll('.category');
-
     categories.forEach((category) => {
         let genre = category.id === 'top-rated-movies' 
             ? '' 
             : category.querySelector('h2').textContent.trim();
-
         loadTopRatedMovies(genre, category);
     });
 }
