@@ -14,7 +14,7 @@ async function fetchData(url) {
         return data;
     } catch (error) {
         console.error('Erreur lors de la récupération des données :', error);
-        return null; // Return null or handle the error as needed
+        return null;
     }
 }
 
@@ -252,18 +252,18 @@ function setupModalHandlers() {
 }
 
 // Charge les films de la catégorie sélectionnée dans la liste déroulante
-function setupCategoryChangeListener() {
+async function initializeCategoryListener() {
     let categorySection = document.getElementById('other-category');
     let categorySelect = document.getElementById('other-categories');
     if (categorySelect.value) {
-        loadTopRatedMovies(categorySelect.value, categorySection).catch(error => {
+        await loadTopRatedMovies(categorySelect.value, categorySection).catch(error => {
             console.error('Erreur lors du chargement des films de la catégorie sélectionnée :', error);
         });
     }
-    categorySelect.addEventListener('change', (event) => {
+    categorySelect.addEventListener('change', async (event) => {
         let selectedCategory = event.target.value;
         if (selectedCategory) {
-            loadTopRatedMovies(selectedCategory, categorySection).catch(error => {
+            await loadTopRatedMovies(selectedCategory, categorySection).catch(error => {
                 console.error('Erreur lors du chargement des films de la catégorie sélectionnée :', error);
             });
         }
@@ -273,12 +273,8 @@ function setupCategoryChangeListener() {
 // Fonction pour charger le meilleur film
 async function loadBestMovieData() {
     let sortedMovieListUrl = `${API_URLS.TITLE_URL}?page=1&sort_by=-imdb_score`;
-    try {
-        let movie = await fetchBestMovieData(sortedMovieListUrl);
-        updateBestMovieUI(movie);
-    } catch (error) {
-        console.error('Erreur lors du chargement du meilleur film :', error);
-    }
+    let movie = await fetchBestMovieData(sortedMovieListUrl);
+    updateBestMovieUI(movie);
 }
 
 // Charge les films pour la section principale et les catégories
@@ -298,17 +294,15 @@ async function loadTopRatedMoviesData() {
 
 // Charge le meilleur film, les films les mieux notés et les catégories
 async function loadInitialData() {
-    // Récupère en premier les catégories pour la liste déroulante
-    await loadCategories(API_URLS.GENRE_URL);
-    // Ensuite on affiche les films dans les sections
-    await loadTopRatedMoviesData();
     await loadBestMovieData();
+    await loadCategories(API_URLS.GENRE_URL);
+    await loadTopRatedMoviesData();
+    initializeCategoryListener();
 }
 
 // Configure les événements et charge les données initiales
-async function initialize() {
-    await loadInitialData();
-    setupCategoryChangeListener();
+function initialize() {
+    loadInitialData();
     setupModalHandlers();
     setupResizeListeners();
 }
