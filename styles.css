@@ -234,7 +234,7 @@ h1 {
     gap: 20px;
 }
 
-/* Styles pour les éléments de categorie-1 */
+/* Styles pour les éléments movie-item créés dans movie-grid par JS */
 .movie-item {
     position: relative;
     overflow: hidden;
